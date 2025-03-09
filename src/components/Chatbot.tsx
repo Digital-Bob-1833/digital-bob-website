@@ -29,11 +29,15 @@ const Chatbot: React.FC = () => {
     const input = userInput.toLowerCase();
     
     if (input.includes('experience') || input.includes('background') || input.includes('work')) {
-      return "I have over 25 years of Technology leadership experience. Currently, I'm the CTO/CPO for Perfectserve, a healthcare SaaS company. In my first year, we achieved a 78% gross margin and improved Adj. EBITDA to 39%, enabling the largest ARR growth in company history of $14M. Previously at SitusAMC, I led digital transformation initiatives that reduced IT operating costs by $1.9M in six months. At DaVita, I managed a $64M project portfolio and implemented innovative healthcare technology solutions.";
+      return "I have over 25 years of Technology leadership experience. Currently, I'm the CTO of Perfectserve, a leading healthcare communication and scheduling platform. In my first year, we achieved a 78% gross margin and improved Adj. EBITDA to 39%, enabling the largest ARR growth in company history of $14M. Previously at SitusAMC, I led digital transformation initiatives that reduced IT operating costs by $1.9M in six months. At DaVita, I managed a $64M project portfolio and implemented innovative healthcare technology solutions.";
     }
     
     if (input.includes('current') || input.includes('perfectserve') || input.includes('role')) {
-      return "As CTO/CPO at Perfectserve, I'm driving significant technological and operational improvements. Key achievements include: increasing R&D velocity by 133% through strategic offshore staffing (73% of team), achieving 78% gross margin (exceeding 77% forecast), improving Adj. EBITDA to 39% (1% over forecast), and enabling record-breaking ARR growth of $14M. I'm focused on modernizing our technology stack, enhancing security protocols, and optimizing development processes.";
+      return "As CTO of Perfectserve, I lead the development of our comprehensive healthcare communication platform, PerfectServe Unite. Our platform includes five integrated solutions: clinical communication & collaboration, provider scheduling (Lightning Bolt), medical answering service, healthcare operator console, and patient engagement. We're recognized as a Leader in the Gartner Magic Quadrant, offering HIPAA-compliant solutions with Dynamic Intelligent Routing® technology. Under my leadership, we've achieved significant improvements: increasing R&D velocity by 133% through strategic offshore staffing (73% of team), achieving 78% gross margin (exceeding 77% forecast), improving Adj. EBITDA to 39% (1% over forecast), and enabling record-breaking ARR growth of $14M. We integrate with 250+ healthcare systems and focus on improving patient care while reducing clinician burnout.";
+    }
+
+    if (input.includes('company') || input.includes('perfectserve') || input.includes('products')) {
+      return "Perfectserve is a leading healthcare technology company that provides the most advanced communication and scheduling platform in healthcare. Our flagship product, PerfectServe Unite, includes five key solutions: 1) Clinical Communication & Collaboration - a HIPAA-compliant platform with Dynamic Intelligent Routing®, 2) Provider Scheduling through our Lightning Bolt solution, which optimizes schedules to reduce physician burnout, 3) Medical Answering Service with automated routing, 4) Healthcare Operator Console for efficient call management, and 5) Patient Engagement tools that require no app installation. We serve major healthcare organizations like Hospital for Special Surgery (NY) and Ochsner Health, with over 250 integrations including EHRs, schedules, directory services, and more.";
     }
     
     if (input.includes('achievements') || input.includes('accomplishments')) {
@@ -77,10 +81,10 @@ const Chatbot: React.FC = () => {
     }
 
     if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
-      return "Hello! I'm Digital Bob, and I'm here to share insights about my experience as a technology leader, my amazing family, my current role as CTO/CPO at Perfectserve, my background in healthcare and financial services, my military service, or my approach to leadership and technology. What interests you most?";
+      return "Hello! I'm Digital Bob, and I'm here to share insights about my experience as a technology leader, my amazing family, my current role as CTO of Perfectserve, my background in healthcare and financial services, my military service, or my approach to leadership and technology. What interests you most?";
     }
 
-    return "I can tell you about my experience as CTO/CPO, technical leadership, military service, healthcare expertise, digital transformation initiatives, my wonderful family, or specific achievements. I also have insights about security, compliance, and team leadership. What would you like to learn more about?";
+    return "I can tell you about my experience as CTO of Perfectserve, our healthcare communication platform, technical leadership, military service, healthcare expertise, digital transformation initiatives, my wonderful family, or specific achievements. I also have insights about security, compliance, and team leadership. What would you like to learn more about?";
   };
 
   const handleSubmit = (e: React.FormEvent) => {
