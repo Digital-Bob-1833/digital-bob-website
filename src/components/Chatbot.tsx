@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { PDFContent, loadPDFContent, findRelevantPDFContent } from '../utils/pdfUtils';
 
 interface Message {
   text: string;
@@ -10,12 +11,36 @@ interface Message {
 const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: "Hi! I'm Digital Bob, your AI assistant. I can tell you about Bob's professional experience, technical leadership, achievements, family, and personal interests. What would you like to know?",
+      text: "Hi! I'm Digital Bob, your AI assistant. I can tell you about Bob's professional experience, technical leadership, achievements, family, and personal interests. I can also provide information from my PDF documents. What would you like to know?",
       sender: 'bot'
     }
   ]);
   const [input, setInput] = useState('');
+  const [pdfContents, setPdfContents] = useState<PDFContent[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Load PDF contents when component mounts
+    const loadPDFs = async () => {
+      try {
+        // Add your PDF files here
+        const pdfPaths = [
+          '/pdfs/resume.pdf',
+          '/pdfs/publications.pdf',
+          '/pdfs/Hackney, Bob - Behavioral Report.pdf'
+        ];
+
+        const contents = await Promise.all(
+          pdfPaths.map(path => loadPDFContent(path))
+        );
+        setPdfContents(contents);
+      } catch (error) {
+        console.error('Error loading PDFs:', error);
+      }
+    };
+
+    loadPDFs();
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -28,6 +53,20 @@ const Chatbot: React.FC = () => {
   const getBotResponse = (userInput: string): string => {
     const input = userInput.toLowerCase();
     
+    // Check PDF content first for behavior-related queries
+    if (input.includes('behavior') || input.includes('personality') || input.includes('style') || input.includes('assessment')) {
+      const pdfResponse = findRelevantPDFContent(input, pdfContents);
+      if (pdfResponse) {
+        return pdfResponse;
+      }
+    }
+
+    // Then check PDF content for any other queries
+    const pdfResponse = findRelevantPDFContent(input, pdfContents);
+    if (pdfResponse) {
+      return pdfResponse;
+    }
+
     if (input.includes('experience') || input.includes('background') || input.includes('work')) {
       return "I have over 25 years of Technology leadership experience. Currently, I'm the CTO of Perfectserve, a leading healthcare communication and scheduling platform. In my first year, we achieved a 78% gross margin and improved Adj. EBITDA to 39%, enabling the largest ARR growth in company history of $14M. Previously at SitusAMC, I led digital transformation initiatives that reduced IT operating costs by $1.9M in six months. At DaVita, I managed a $64M project portfolio and implemented innovative healthcare technology solutions.";
     }
@@ -82,6 +121,11 @@ const Chatbot: React.FC = () => {
 
     if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
       return "Hello! I'm Digital Bob, and I'm here to share insights about my experience as a technology leader, my amazing family, my current role as CTO of Perfectserve, my background in healthcare and financial services, my military service, or my approach to leadership and technology. What interests you most?";
+    }
+
+    // Add a response about PDF capabilities
+    if (input.includes('pdf') || input.includes('document') || input.includes('resume') || input.includes('publication')) {
+      return "I can access and provide information from various PDF documents, including resumes, publications, and other materials. What specific information are you looking for?";
     }
 
     return "I can tell you about my experience as CTO of Perfectserve, our healthcare communication platform, technical leadership, military service, healthcare expertise, digital transformation initiatives, my wonderful family, or specific achievements. I also have insights about security, compliance, and team leadership. What would you like to learn more about?";
