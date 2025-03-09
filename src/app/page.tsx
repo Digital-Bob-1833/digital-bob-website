@@ -21,7 +21,7 @@ export default function Home() {
             </div>
           </div>
           <p className="text-xl text-blue-700">Bob Hackney</p>
-          <p className="text-lg text-blue-600">Software Engineer</p>
+          <p className="text-lg text-blue-600">CTO</p>
         </div>
 
         {/* Right side - Chatbot */}
