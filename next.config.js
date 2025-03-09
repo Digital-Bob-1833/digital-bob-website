@@ -10,7 +10,8 @@ const nextConfig = {
     ],
     domains: ['i.imgur.com'],
     unoptimized: true
-  }
+  },
+  experimental: {}
 }
 
 module.exports = nextConfig 
