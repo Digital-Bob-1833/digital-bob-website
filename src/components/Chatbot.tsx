@@ -165,6 +165,17 @@ const Chatbot: React.FC = () => {
       };
     }
 
+    if (input.includes('team') || input.includes('engineers') || input.includes('developers') || input.includes('staff')) {
+      return {
+        text: "I'm incredibly proud of our talented technology team at Perfectserve. Through strategic offshore staffing, we've built a highly efficient team that's 73% offshore, leading to a 133% increase in R&D velocity. Our team is focused on innovation, quality, and delivering solutions that make a real difference in healthcare communication. We maintain high standards while fostering a collaborative, supportive environment where every team member can grow and contribute meaningfully to our mission.",
+        sender: 'bot',
+        image: {
+          src: '/images/Perfectserve-tech-team.jpeg',
+          alt: 'Bob Hackney with Perfectserve Tech Team'
+        }
+      };
+    }
+
     if (input.includes('healthcare') || input.includes('medical') || input.includes('health')) {
       return {
         text: "My experience in healthcare technology is extensive, spanning both provider and software perspectives. At Perfectserve, I'm leading the development of innovative healthcare communication solutions. At DaVita, I managed clinical systems transformation projects and implemented technology solutions that improved patient care delivery. I understand the unique challenges of healthcare IT, including regulatory compliance (HIPAA), interoperability standards (HL7/FHIR), and the critical nature of healthcare systems.",
