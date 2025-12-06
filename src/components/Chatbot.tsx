@@ -10,6 +10,7 @@ interface Message {
     src: string;
     alt: string;
   };
+  video?: string; // D-ID talking avatar video URL
 }
 
 // Photo collections organized by topic
@@ -159,6 +160,8 @@ const Chatbot: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [videoAvatarEnabled, setVideoAvatarEnabled] = useState(true);
+  const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
@@ -330,15 +333,40 @@ const Chatbot: React.FC = () => {
 
       if (response.ok) {
         const image = getImageForResponse(currentInput, data.response);
+        
+        // Try to generate video avatar if enabled
+        let videoUrl: string | undefined;
+        if (videoAvatarEnabled && voiceEnabled) {
+          setIsGeneratingVideo(true);
+          try {
+            const videoResponse = await fetch('/api/video-avatar', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ text: data.response }),
+            });
+            
+            if (videoResponse.ok) {
+              const videoData = await videoResponse.json();
+              videoUrl = videoData.videoUrl;
+            }
+          } catch (videoError) {
+            console.error('Video avatar error:', videoError);
+          }
+          setIsGeneratingVideo(false);
+        }
+        
         const botMessage: Message = {
           text: data.response,
           sender: 'bot',
-          image: image || undefined,
+          image: !videoUrl ? (image || undefined) : undefined,
+          video: videoUrl,
         };
         setMessages(prev => [...prev, botMessage]);
         
-        // Speak the response
-        speakText(data.response);
+        // Only speak if no video (video has its own audio)
+        if (!videoUrl) {
+          speakText(data.response);
+        }
       } else {
         const errorMessage: Message = {
           text: "Look, there's a technical issue. Let's try that again.",
@@ -375,6 +403,20 @@ const Chatbot: React.FC = () => {
           <p className="text-blue-200 text-sm">CTO • Direct • Results-Driven</p>
         </div>
         <div className="ml-auto flex items-center gap-3">
+          {/* Video avatar toggle button */}
+          <button
+            onClick={() => setVideoAvatarEnabled(!videoAvatarEnabled)}
+            className={`p-2 rounded-full transition-all ${
+              videoAvatarEnabled 
+                ? 'bg-purple-500 hover:bg-purple-600' 
+                : 'bg-gray-500 hover:bg-gray-600'
+            }`}
+            title={videoAvatarEnabled ? 'Video avatar ON - click to disable' : 'Video avatar OFF - click to enable'}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </button>
           {/* Voice toggle button */}
           <button
             onClick={() => setVoiceEnabled(!voiceEnabled)}
@@ -429,7 +471,19 @@ const Chatbot: React.FC = () => {
               }`}
             >
               <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
-              {message.image && (
+              {message.video && (
+                <div className="mt-3 rounded-lg overflow-hidden">
+                  <video 
+                    src={message.video} 
+                    autoPlay 
+                    controls
+                    className="w-full max-h-64 rounded-lg"
+                    onEnded={() => setIsSpeaking(false)}
+                    onPlay={() => setIsSpeaking(true)}
+                  />
+                </div>
+              )}
+              {message.image && !message.video && (
                 <div className="mt-3 relative w-full aspect-[4/3] max-h-64 rounded-lg overflow-hidden">
                   <Image
                     src={message.image.src}
@@ -454,6 +508,9 @@ const Chatbot: React.FC = () => {
                 <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
                 <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
               </div>
+              {isGeneratingVideo && (
+                <p className="text-xs text-purple-600 mt-2 animate-pulse">🎬 Generating video avatar...</p>
+              )}
             </div>
           </div>
         )}
