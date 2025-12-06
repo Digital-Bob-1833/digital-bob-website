@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Bob's custom ElevenLabs voice ID - can be overridden via environment variable
-const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || 'WFGF6T2y4O5nZcJU5zAV';
+const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || process.env.ELEVEN_VOICE_ID || 'WFGF6T2y4O5nZcJU5zAV';
 
 export async function POST(request: NextRequest) {
   try {
-    const apiKey = process.env.ELEVENLABS_API_KEY;
+    const apiKey = process.env.ELEVENLABS_API_KEY || process.env.ELEVEN_API_KEY;
     
     // Debug: Log what env vars exist (without showing values)
     console.log('Environment check:', {
