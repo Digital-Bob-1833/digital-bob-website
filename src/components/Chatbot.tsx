@@ -6,13 +6,41 @@ import Image from 'next/image';
 interface Message {
   text: string;
   sender: 'user' | 'bot';
+  image?: {
+    src: string;
+    alt: string;
+  };
 }
+
+// Map topics to relevant images
+const getImageForResponse = (userInput: string, botResponse: string): { src: string; alt: string } | null => {
+  const input = (userInput + ' ' + botResponse).toLowerCase();
+  
+  if (input.includes('family') || input.includes('children') || input.includes('kids') || input.includes('mel') || input.includes('greg') || input.includes('robby') || input.includes('hannah') || input.includes('nathan')) {
+    return { src: '/images/bob-family.jpg', alt: 'Bob Hackney with Family' };
+  }
+  if (input.includes('dawn') || input.includes('wife') || input.includes('spouse')) {
+    return { src: '/images/bob-dawn.jpeg', alt: 'Bob Hackney with Dawn' };
+  }
+  if (input.includes('team') || input.includes('perfectserve') || input.includes('engineers') || input.includes('developers') || input.includes('staff')) {
+    return { src: '/images/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Perfectserve Tech Team' };
+  }
+  if (input.includes('professional') || input.includes('headshot') || input.includes('cto') || input.includes('leader')) {
+    return { src: '/images/bob-professional.jpg', alt: 'Bob Hackney - Professional' };
+  }
+  
+  return null;
+};
 
 const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       text: "Hey, I'm Bob Hackney - CTO, former Marine, and proud family man. I don't waste time with small talk, so let's get to it. What do you want to know about my experience, leadership approach, or what we're building at Perfectserve?",
       sender: 'bot',
+      image: {
+        src: '/images/bob-professional.jpg',
+        alt: 'Bob Hackney - Professional'
+      }
     }
   ]);
   const [input, setInput] = useState('');
@@ -36,6 +64,7 @@ const Chatbot: React.FC = () => {
       sender: 'user'
     };
 
+    const currentInput = input;
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
@@ -47,7 +76,7 @@ const Chatbot: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: input,
+          message: currentInput,
           conversationHistory: messages,
         }),
       });
@@ -55,9 +84,11 @@ const Chatbot: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
+        const image = getImageForResponse(currentInput, data.response);
         const botMessage: Message = {
           text: data.response,
           sender: 'bot',
+          image: image || undefined,
         };
         setMessages(prev => [...prev, botMessage]);
       } else {
@@ -116,6 +147,20 @@ const Chatbot: React.FC = () => {
               }`}
             >
               <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
+              {message.image && (
+                <div className="mt-3 relative w-full h-48 rounded-lg overflow-hidden">
+                  <Image
+                    src={message.image.src}
+                    alt={message.image.alt}
+                    fill
+                    className="object-cover"
+                    onError={(e) => {
+                      // Hide broken images
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                </div>
+              )}
             </div>
           </div>
         ))}
