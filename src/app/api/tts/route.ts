@@ -36,10 +36,10 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({
           text: text,
-          model_id: 'eleven_turbo_v2_5',
+          model_id: 'eleven_flash_v2_5',
           voice_settings: {
-            stability: 0.5,
-            similarity_boost: 1.0
+            stability: 0.35,
+            similarity_boost: 0.85
           }
         }),
       }
