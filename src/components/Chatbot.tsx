@@ -152,6 +152,9 @@ const Chatbot: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Track pending voice input for auto-submit
+  const [pendingVoiceInput, setPendingVoiceInput] = useState<string | null>(null);
+
   // Initialize speech recognition
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -165,6 +168,7 @@ const Chatbot: React.FC = () => {
         recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
           const transcript = event.results[0][0].transcript;
           setInput(transcript);
+          setPendingVoiceInput(transcript); // Flag for auto-submit
           setIsListening(false);
         };
 
@@ -178,6 +182,18 @@ const Chatbot: React.FC = () => {
       }
     }
   }, []);
+
+  // Auto-submit when voice input is received
+  useEffect(() => {
+    if (pendingVoiceInput && pendingVoiceInput.trim()) {
+      // Small delay to show the text before sending
+      const timer = setTimeout(() => {
+        handleVoiceSubmit(pendingVoiceInput);
+        setPendingVoiceInput(null);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [pendingVoiceInput]);
 
   // Text-to-speech using ElevenLabs with Bob's custom voice
   const speakText = async (text: string) => {
@@ -281,6 +297,63 @@ const Chatbot: React.FC = () => {
       // Also stop browser TTS if active
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
+    }
+  };
+
+  // Handle voice input auto-submit
+  const handleVoiceSubmit = async (voiceText: string) => {
+    if (!voiceText.trim() || isLoading) return;
+
+    const userMessage: Message = {
+      text: voiceText,
+      sender: 'user'
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: voiceText,
+          conversationHistory: messages,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const image = getImageForResponse(voiceText, data.response);
+        const botMessage: Message = {
+          text: data.response,
+          sender: 'bot',
+          image: image || undefined,
+        };
+        setMessages(prev => [...prev, botMessage]);
+        
+        // Speak the response
+        speakText(data.response);
+      } else {
+        const errorMessage: Message = {
+          text: "Look, there's a technical issue. Let's try that again.",
+          sender: 'bot',
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      const errorMessage: Message = {
+        text: "Connection issue. I don't have time for technical problems - let's try again.",
+        sender: 'bot',
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
