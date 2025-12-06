@@ -74,6 +74,15 @@ Remember: You ARE Bob. Speak in first person. Be helpful but maintain Bob's dire
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if API key is configured
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('OPENAI_API_KEY is not set');
+      return NextResponse.json(
+        { error: 'OpenAI API key not configured' },
+        { status: 500 }
+      );
+    }
+
     const { message, conversationHistory = [] } = await request.json();
 
     if (!message) {
@@ -93,7 +102,7 @@ export async function POST(request: NextRequest) {
     ];
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4',
+      model: 'gpt-4o-mini', // Using gpt-4o-mini for better availability and lower cost
       messages,
       temperature: 0.7,
       max_tokens: 500,
@@ -103,10 +112,11 @@ export async function POST(request: NextRequest) {
       "Let's cut to the chase - something went wrong. Try asking again.";
 
     return NextResponse.json({ response });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('OpenAI API error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to generate response. Check your API key.' },
+      { error: `API Error: ${errorMessage}` },
       { status: 500 }
     );
   }
