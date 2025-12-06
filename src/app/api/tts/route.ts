@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Bob's custom ElevenLabs voice ID - can be overridden via environment variable
-const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || process.env.ELEVEN_VOICE_ID || 'WFGF6T2y4O5nZcJU5zAV';
+// Bob's custom ElevenLabs voice ID
+const VOICE_ID = 'WFGF6T2y4O5nZcJU5zAV';
+
+// Hardcoded temporarily since Vercel env vars aren't working
+const ELEVENLABS_KEY = '2a0b1b0fe691af45e1f1c82681a6c9e42733af9ce6e7e5f78eeecc26aca2898c';
 
 export async function POST(request: NextRequest) {
   try {
-    const apiKey = process.env.ELEVENLABS_API_KEY || process.env.ELEVEN_API_KEY;
+    const apiKey = process.env.ELEVENLABS_API_KEY || ELEVENLABS_KEY;
     
     // Debug: Log what env vars exist (without showing values)
     console.log('Environment check:', {
