@@ -152,10 +152,10 @@ const Chatbot: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Track pending voice input for auto-submit
-  const [pendingVoiceInput, setPendingVoiceInput] = useState<string | null>(null);
+  // Ref for auto-submit button
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Initialize speech recognition
+  // Initialize speech recognition with auto-submit
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -168,8 +168,14 @@ const Chatbot: React.FC = () => {
         recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
           const transcript = event.results[0][0].transcript;
           setInput(transcript);
-          setPendingVoiceInput(transcript); // Flag for auto-submit
           setIsListening(false);
+          
+          // Auto-submit after a short delay to show the text
+          setTimeout(() => {
+            if (submitButtonRef.current) {
+              submitButtonRef.current.click();
+            }
+          }, 600);
         };
 
         recognitionRef.current.onerror = () => {
@@ -182,18 +188,6 @@ const Chatbot: React.FC = () => {
       }
     }
   }, []);
-
-  // Auto-submit when voice input is received
-  useEffect(() => {
-    if (pendingVoiceInput && pendingVoiceInput.trim()) {
-      // Small delay to show the text before sending
-      const timer = setTimeout(() => {
-        handleVoiceSubmit(pendingVoiceInput);
-        setPendingVoiceInput(null);
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [pendingVoiceInput]);
 
   // Text-to-speech using ElevenLabs with Bob's custom voice
   const speakText = async (text: string) => {
@@ -547,6 +541,7 @@ const Chatbot: React.FC = () => {
             placeholder={isListening ? "Listening..." : "Ask me anything..."}
           />
           <button
+            ref={submitButtonRef}
             type="submit"
             disabled={isLoading || !input.trim()}
             className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all shadow-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
