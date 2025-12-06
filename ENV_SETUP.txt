@@ -1,0 +1,16 @@
+HOW TO SET UP YOUR OPENAI API KEY
+==================================
+
+1. Create a file named ".env.local" in this folder (Cursor website for bob)
+
+2. Add this line to the file:
+   OPENAI_API_KEY=your-actual-openai-api-key
+
+3. Replace "your-actual-openai-api-key" with your real OpenAI API key
+
+4. Save the file
+
+Note: The .env.local file is automatically ignored by git, so your API key stays private.
+
+For Vercel deployment, add the OPENAI_API_KEY as an Environment Variable in your Vercel project settings.
+
