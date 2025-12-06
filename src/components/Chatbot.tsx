@@ -142,7 +142,7 @@ const Chatbot: React.FC = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<ISpeechRecognition | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -443,10 +443,21 @@ const Chatbot: React.FC = () => {
 };
 
 // Add TypeScript declarations for Web Speech API
+interface ISpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: Event) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+
 declare global {
   interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
+    SpeechRecognition: new () => ISpeechRecognition;
+    webkitSpeechRecognition: new () => ISpeechRecognition;
   }
 }
 
