@@ -179,7 +179,7 @@ const Chatbot: React.FC = () => {
     }
   }, []);
 
-  // Text-to-speech function
+  // Text-to-speech function - 55 year old Marine, direct and to the point
   const speakText = (text: string) => {
     if (!voiceEnabled || typeof window === 'undefined') return;
     
@@ -187,18 +187,32 @@ const Chatbot: React.FC = () => {
     window.speechSynthesis.cancel();
     
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.0;
-    utterance.pitch = 0.9;
-    utterance.volume = 1.0;
     
-    // Try to find a good male voice
+    // Marine voice settings: authoritative, direct, no-nonsense
+    utterance.rate = 1.05;    // Slightly faster - direct and to the point
+    utterance.pitch = 0.75;   // Lower pitch - mature, authoritative male voice
+    utterance.volume = 1.0;   // Full volume - confident
+    
+    // Try to find the deepest/most authoritative male voice available
     const voices = window.speechSynthesis.getVoices();
+    
+    // Priority order for Marine-like voices (deep, authoritative)
     const preferredVoice = voices.find(voice => 
-      voice.name.includes('Daniel') || 
+      voice.name.includes('Aaron') ||      // Deep male voice
+      voice.name.includes('Fred') ||       // Mature male
+      voice.name.includes('Daniel') ||     // British but authoritative
+      voice.name.includes('Thomas') ||     // German-accented but deep
+      voice.name.includes('Gordon')        // Mature
+    ) || voices.find(voice => 
       voice.name.includes('Alex') || 
-      voice.name.includes('Male') ||
-      voice.name.includes('David')
-    ) || voices.find(voice => voice.lang.startsWith('en'));
+      voice.name.includes('David') ||
+      voice.name.includes('James') ||
+      voice.name.includes('Male')
+    ) || voices.find(voice => 
+      voice.lang.startsWith('en') && voice.name.toLowerCase().includes('male')
+    ) || voices.find(voice => 
+      voice.lang === 'en-US'
+    );
     
     if (preferredVoice) {
       utterance.voice = preferredVoice;
