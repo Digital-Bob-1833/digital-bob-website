@@ -50,68 +50,80 @@ const getRandomPhoto = (collection: string[]): string => {
   return collection[Math.floor(Math.random() * collection.length)];
 };
 
-// Map topics to relevant images - organized by folder with random selection
+// Map topics to relevant images
 const getImageForResponse = (userInput: string, botResponse: string): { src: string; alt: string } | null => {
   const input = (userInput + ' ' + botResponse).toLowerCase();
   
-  // Military / Marine / USMC - use Marine folder
   if (input.includes('usmc') || input.includes('marine') || input.includes('military') || input.includes('navy achievement') || input.includes('veteran') || input.includes('overseas deployment')) {
     return { src: getRandomPhoto(photoCollections.marine), alt: 'Bob Hackney - USMC Marine' };
   }
   
-  // DaVita - use DaVita folder
   if (input.includes('davita') || input.includes('da vita') || input.includes('dialysis') || input.includes('cwow') || input.includes('clinical systems') || input.includes('jerry')) {
     return { src: getRandomPhoto(photoCollections.davita), alt: 'Bob Hackney - DaVita' };
   }
   
-  // SitusAMC - use Professional folder (no SitusAMC photos yet)
   if (input.includes('situsamc') || input.includes('situs') || input.includes('stonepoint') || input.includes('real estate finance')) {
     return { src: getRandomPhoto(photoCollections.professional), alt: 'Bob Hackney - SitusAMC' };
   }
   
-  // Telecom - use Professional folder (no Telecom photos yet)
   if (input.includes('telecom') || input.includes('billing') || input.includes('ericsson') || input.includes('nortel') || input.includes('motorola') || input.includes('prepaid')) {
     return { src: getRandomPhoto(photoCollections.professional), alt: 'Bob Hackney - Telecom' };
   }
   
-  // Playbook / Transformation / Business strategy - use Perfectserve leadership photo
   if (input.includes('playbook') || input.includes('transform') || input.includes('private equity') || input.includes('strategy')) {
     return { src: '/images/Perfectserve/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Leadership & Strategy' };
   }
   
-  // Perfectserve - use Perfectserve folder
   if (input.includes('perfectserve') || input.includes('perfect serve') || input.includes('k1') || input.includes('arr') || input.includes('ebitda')) {
     return { src: getRandomPhoto(photoCollections.perfectserve), alt: 'Bob Hackney - Perfectserve' };
   }
   
-  // Team / Engineers / Developers
   if (input.includes('team') || input.includes('engineers') || input.includes('developers') || input.includes('staff') || input.includes('offshore') || input.includes('albania')) {
     return { src: '/images/Perfectserve/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Tech Team' };
   }
   
-  // Family - use Family folder
   if (input.includes('family') || input.includes('children') || input.includes('kids') || input.includes('mel') || input.includes('greg') || input.includes('robby') || input.includes('hannah') || input.includes('nathan') || input.includes('grandchildren') || input.includes('grandkids')) {
     return { src: getRandomPhoto(photoCollections.family), alt: 'Bob Hackney with Family' };
   }
   
-  // Dawn / Wife - use Family folder dawn photos
   if (input.includes('dawn') || input.includes('wife') || input.includes('spouse')) {
     const dawnPhotos = ['/images/Family/bob-dawn.jpeg', '/images/Family/Bob & Dawn.jpg'];
     return { src: getRandomPhoto(dawnPhotos), alt: 'Bob Hackney with Dawn' };
   }
   
-  // Professional / CTO / Leadership (general) - use Professional folder
   if (input.includes('professional') || input.includes('headshot') || input.includes('cto') || input.includes('leader') || input.includes('leadership')) {
     return { src: getRandomPhoto(photoCollections.professional), alt: 'Bob Hackney - Professional' };
   }
   
-  // AI / Technology / Cursor / LLM
   if (input.includes('ai') || input.includes('cursor') || input.includes('llm') || input.includes('machine learning') || input.includes('automation')) {
     return { src: getRandomPhoto(photoCollections.perfectserve), alt: 'Bob Hackney - Technology' };
   }
   
   return null;
 };
+
+// Speech recognition type declaration
+interface SpeechRecognitionEvent extends Event {
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  item(index: number): SpeechRecognitionResult;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  length: number;
+  item(index: number): SpeechRecognitionAlternative;
+  [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
 
 const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
@@ -126,7 +138,11 @@ const Chatbot: React.FC = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -135,6 +151,89 @@ const Chatbot: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Initialize speech recognition
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognitionRef.current = new SpeechRecognition();
+        recognitionRef.current.continuous = false;
+        recognitionRef.current.interimResults = false;
+        recognitionRef.current.lang = 'en-US';
+
+        recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+          const transcript = event.results[0][0].transcript;
+          setInput(transcript);
+          setIsListening(false);
+        };
+
+        recognitionRef.current.onerror = () => {
+          setIsListening(false);
+        };
+
+        recognitionRef.current.onend = () => {
+          setIsListening(false);
+        };
+      }
+    }
+  }, []);
+
+  // Text-to-speech function
+  const speakText = (text: string) => {
+    if (!voiceEnabled || typeof window === 'undefined') return;
+    
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.0;
+    utterance.pitch = 0.9;
+    utterance.volume = 1.0;
+    
+    // Try to find a good male voice
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(voice => 
+      voice.name.includes('Daniel') || 
+      voice.name.includes('Alex') || 
+      voice.name.includes('Male') ||
+      voice.name.includes('David')
+    ) || voices.find(voice => voice.lang.startsWith('en'));
+    
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+    
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Toggle listening
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      alert('Speech recognition is not supported in your browser. Try Chrome or Edge.');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
+
+  // Stop speaking
+  const stopSpeaking = () => {
+    if (typeof window !== 'undefined') {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,6 +271,9 @@ const Chatbot: React.FC = () => {
           image: image || undefined,
         };
         setMessages(prev => [...prev, botMessage]);
+        
+        // Speak the response
+        speakText(data.response);
       } else {
         const errorMessage: Message = {
           text: "Look, there's a technical issue. Let's try that again.",
@@ -207,7 +309,41 @@ const Chatbot: React.FC = () => {
           <h3 className="text-white font-bold text-lg">Digital Bob</h3>
           <p className="text-blue-200 text-sm">CTO • Direct • Results-Driven</p>
         </div>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-3">
+          {/* Voice toggle button */}
+          <button
+            onClick={() => setVoiceEnabled(!voiceEnabled)}
+            className={`p-2 rounded-full transition-all ${
+              voiceEnabled 
+                ? 'bg-green-500 hover:bg-green-600' 
+                : 'bg-gray-500 hover:bg-gray-600'
+            }`}
+            title={voiceEnabled ? 'Voice enabled - click to mute' : 'Voice muted - click to enable'}
+          >
+            {voiceEnabled ? (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clipRule="evenodd" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+              </svg>
+            )}
+          </button>
+          {/* Speaking indicator */}
+          {isSpeaking && (
+            <button
+              onClick={stopSpeaking}
+              className="p-2 rounded-full bg-red-500 hover:bg-red-600 animate-pulse"
+              title="Click to stop speaking"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+              </svg>
+            </button>
+          )}
           <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
           <span className="text-green-300 text-sm">Online</span>
         </div>
@@ -236,7 +372,6 @@ const Chatbot: React.FC = () => {
                     fill
                     className="object-contain bg-gray-100"
                     onError={(e) => {
-                      // Hide broken images
                       (e.target as HTMLImageElement).style.display = 'none';
                     }}
                   />
@@ -264,13 +399,30 @@ const Chatbot: React.FC = () => {
       {/* Input */}
       <form onSubmit={handleSubmit} className="p-4 bg-white border-t border-gray-200">
         <div className="flex gap-3">
+          {/* Microphone button */}
+          <button
+            type="button"
+            onClick={toggleListening}
+            disabled={isLoading}
+            className={`p-3 rounded-xl transition-all ${
+              isListening 
+                ? 'bg-red-500 hover:bg-red-600 animate-pulse' 
+                : 'bg-gray-200 hover:bg-gray-300'
+            } disabled:opacity-50`}
+            title={isListening ? 'Listening... Click to stop' : 'Click to speak'}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${isListening ? 'text-white' : 'text-gray-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+            </svg>
+          </button>
+          
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isLoading}
             className="flex-1 p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm disabled:bg-gray-100"
-            placeholder="Ask me anything..."
+            placeholder={isListening ? "Listening..." : "Ask me anything..."}
           />
           <button
             type="submit"
@@ -280,9 +432,22 @@ const Chatbot: React.FC = () => {
             {isLoading ? '...' : 'Send'}
           </button>
         </div>
+        {isListening && (
+          <p className="text-center text-sm text-red-500 mt-2 animate-pulse">
+            🎤 Listening... Speak now
+          </p>
+        )}
       </form>
     </div>
   );
 };
+
+// Add TypeScript declarations for Web Speech API
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+}
 
 export default Chatbot;
