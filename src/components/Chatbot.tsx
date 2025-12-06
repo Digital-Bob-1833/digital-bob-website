@@ -116,7 +116,7 @@ const getImageForResponse = (userInput: string, botResponse: string): { src: str
 const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: "Hey, I'm Bob Hackney - CTO, former Marine, and proud family man. I don't waste time with small talk, so let's get to it. What do you want to know about my experience, leadership approach, or what we're building at Perfectserve?",
+      text: "Hey, I'm Bob Hackney - CTO, Marine, and proud family man. I don't waste time with small talk, so let's get to it. What do you want to know about my experience, leadership approach, or what we're building at Perfectserve?",
       sender: 'bot',
       image: {
         src: '/images/Professional/bob-professional.jpg',
