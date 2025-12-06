@@ -234,6 +234,7 @@ const Chatbot: React.FC = () => {
       
     } catch (error) {
       console.error('ElevenLabs TTS error:', error);
+      alert('ElevenLabs voice failed - check console. Using backup voice.');
       setIsSpeaking(false);
       // Fallback to browser TTS
       fallbackBrowserTTS(text);
