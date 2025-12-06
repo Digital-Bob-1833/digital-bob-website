@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Bob's custom ElevenLabs voice ID
-const VOICE_ID = 'WFGF6T2y4O5nZcJU5zAV';
+// Bob's custom ElevenLabs voice ID - can be overridden via environment variable
+const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || 'WFGF6T2y4O5nZcJU5zAV';
 
 export async function POST(request: NextRequest) {
   try {
