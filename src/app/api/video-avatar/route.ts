@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 // D-ID API credentials
 const DID_API_KEY = 'aGFja25leWJvYkBob3RtYWlsLmNvbQ:t5lcjnp_PsHpHWTgL1xre';
 
-// Bob's photo URL (must be publicly accessible)
-const BOB_PHOTO_URL = 'https://digital-bob-website.vercel.app/images/Professional/bob-professional.jpg';
+// Bob's avatar URL (must be publicly accessible)
+const BOB_PHOTO_URL = 'https://digital-bob-website.vercel.app/bob-3d-avatar.png';
 
 // Bob's ElevenLabs voice ID
 const VOICE_ID = 'WFGF6T2y4O5nZcJU5zAV';
