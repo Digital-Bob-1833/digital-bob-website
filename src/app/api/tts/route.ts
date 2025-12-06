@@ -7,10 +7,17 @@ export async function POST(request: NextRequest) {
   try {
     const apiKey = process.env.ELEVENLABS_API_KEY;
     
+    // Debug: Log what env vars exist (without showing values)
+    console.log('Environment check:', {
+      hasElevenLabsKey: !!process.env.ELEVENLABS_API_KEY,
+      hasVoiceId: !!process.env.ELEVENLABS_VOICE_ID,
+      hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+    });
+    
     if (!apiKey) {
-      console.error('ELEVENLABS_API_KEY is not set');
+      console.error('ELEVENLABS_API_KEY is not set. Make sure variable name is exactly: ELEVENLABS_API_KEY');
       return NextResponse.json(
-        { error: 'ElevenLabs API key not configured' },
+        { error: 'ElevenLabs API key not configured. Variable must be named exactly: ELEVENLABS_API_KEY' },
         { status: 500 }
       );
     }
