@@ -83,7 +83,7 @@ const getImageForResponse = (userInput: string, botResponse: string): { src: str
   }
   
   if (input.includes('family') || input.includes('children') || input.includes('kids') || input.includes('mel') || input.includes('greg') || input.includes('robby') || input.includes('hannah') || input.includes('nathan') || input.includes('grandchildren') || input.includes('grandkids')) {
-    return { src: getRandomPhoto(photoCollections.family), alt: 'Bob Hackney with Family' };
+    return { src: '/images/Family/bob-family.jpg', alt: 'Bob Hackney with Family' };
   }
   
   if (input.includes('dawn') || input.includes('wife') || input.includes('spouse')) {
