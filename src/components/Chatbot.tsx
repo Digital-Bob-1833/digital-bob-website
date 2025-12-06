@@ -16,12 +16,17 @@ interface Message {
 const getImageForResponse = (userInput: string, botResponse: string): { src: string; alt: string } | null => {
   const input = (userInput + ' ' + botResponse).toLowerCase();
   
-  // Military / Marine / USMC - use Marine pictures
-  if (input.includes('usmc') || input.includes('marine') || input.includes('military') || input.includes('corps') || input.includes('service') || input.includes('veteran')) {
+  // Military / Marine / USMC - use Marine pictures (removed "service" - too generic, conflicts with IaaS/PaaS/SaaS)
+  if (input.includes('usmc') || input.includes('marine') || input.includes('military') || input.includes('navy achievement') || input.includes('veteran') || input.includes('overseas deployment')) {
     return { src: '/images/Marine Vehicle.jpg', alt: 'Bob Hackney - USMC Marine' };
   }
   
-  // Perfectserve - use Perfectserve pictures (alternate between them)
+  // Playbook / Transformation / Business strategy - use leadership photo
+  if (input.includes('playbook') || input.includes('transform') || input.includes('private equity') || input.includes('strategy')) {
+    return { src: '/images/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Leadership & Strategy' };
+  }
+  
+  // Perfectserve - use Perfectserve pictures
   if (input.includes('perfectserve') || input.includes('perfect serve')) {
     // Use leadership photo for leadership/company topics
     if (input.includes('leadership') || input.includes('leader') || input.includes('company') || input.includes('cto')) {
