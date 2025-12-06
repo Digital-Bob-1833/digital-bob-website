@@ -187,6 +187,7 @@ const Chatbot: React.FC = () => {
     
     try {
       // Call our ElevenLabs API endpoint
+      console.log('Calling ElevenLabs TTS...');
       const response = await fetch('/api/tts', {
         method: 'POST',
         headers: {
@@ -195,11 +196,14 @@ const Chatbot: React.FC = () => {
         body: JSON.stringify({ text }),
       });
 
-      if (!response.ok) {
-        throw new Error('TTS request failed');
-      }
-
       const data = await response.json();
+      
+      if (!response.ok) {
+        console.error('ElevenLabs TTS failed:', data.error);
+        throw new Error(data.error || 'TTS request failed');
+      }
+      
+      console.log('ElevenLabs TTS success!');
       
       // Create audio from base64
       const audio = new Audio(`data:audio/mpeg;base64,${data.audio}`);
