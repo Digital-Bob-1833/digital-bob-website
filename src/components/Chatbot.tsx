@@ -12,28 +12,66 @@ interface Message {
   };
 }
 
-// Map topics to relevant images - organized by folder
+// Photo collections organized by topic
+const photoCollections = {
+  marine: [
+    '/images/Marine/Marine Vehicle.jpg',
+    '/images/Marine/bob USMC.JPG',
+    '/images/Marine/IMG_3094.jpeg',
+  ],
+  davita: [
+    '/images/DaVita/IMG_0894.JPG',
+    '/images/DaVita/IMG_3037.jpeg',
+    '/images/DaVita/Jerry and Bob.JPG',
+  ],
+  perfectserve: [
+    '/images/Perfectserve/Perfectserve leadership.jpeg',
+    '/images/Perfectserve/Perfectserve-tech-team.jpeg',
+    '/images/Perfectserve/IMG_3639.jpeg',
+    '/images/Perfectserve/IMG_5704.jpeg',
+    '/images/Perfectserve/2117762790038193511.jpg',
+    '/images/Perfectserve/435685396061504320.jpg',
+  ],
+  family: [
+    '/images/Family/bob-family.jpg',
+    '/images/Family/bob-dawn.jpeg',
+    '/images/Family/Bob & Dawn.jpg',
+    '/images/Family/IMG_2507.jpeg',
+    '/images/Family/IMG_8861.jpeg',
+  ],
+  professional: [
+    '/images/Professional/bob-professional.jpg',
+    '/images/Professional/cold-bob.jpeg',
+  ],
+};
+
+// Get random photo from a collection
+const getRandomPhoto = (collection: string[]): string => {
+  return collection[Math.floor(Math.random() * collection.length)];
+};
+
+// Map topics to relevant images - organized by folder with random selection
 const getImageForResponse = (userInput: string, botResponse: string): { src: string; alt: string } | null => {
   const input = (userInput + ' ' + botResponse).toLowerCase();
   
   // Military / Marine / USMC - use Marine folder
   if (input.includes('usmc') || input.includes('marine') || input.includes('military') || input.includes('navy achievement') || input.includes('veteran') || input.includes('overseas deployment')) {
-    return { src: '/images/Marine/Marine Vehicle.jpg', alt: 'Bob Hackney - USMC Marine' };
+    return { src: getRandomPhoto(photoCollections.marine), alt: 'Bob Hackney - USMC Marine' };
   }
   
   // DaVita - use DaVita folder
-  if (input.includes('davita') || input.includes('da vita') || input.includes('dialysis') || input.includes('cwow') || input.includes('clinical systems')) {
-    return { src: '/images/DaVita/davita.jpg', alt: 'Bob Hackney - DaVita' };
+  if (input.includes('davita') || input.includes('da vita') || input.includes('dialysis') || input.includes('cwow') || input.includes('clinical systems') || input.includes('jerry')) {
+    return { src: getRandomPhoto(photoCollections.davita), alt: 'Bob Hackney - DaVita' };
   }
   
-  // SitusAMC - use SitusAMC folder
+  // SitusAMC - use Professional folder (no SitusAMC photos yet)
   if (input.includes('situsamc') || input.includes('situs') || input.includes('stonepoint') || input.includes('real estate finance')) {
-    return { src: '/images/SitusAMC/situsamc.jpg', alt: 'Bob Hackney - SitusAMC' };
+    return { src: getRandomPhoto(photoCollections.professional), alt: 'Bob Hackney - SitusAMC' };
   }
   
-  // Telecom - use Telecom folder
+  // Telecom - use Professional folder (no Telecom photos yet)
   if (input.includes('telecom') || input.includes('billing') || input.includes('ericsson') || input.includes('nortel') || input.includes('motorola') || input.includes('prepaid')) {
-    return { src: '/images/Telecom/telecom.jpg', alt: 'Bob Hackney - Telecom' };
+    return { src: getRandomPhoto(photoCollections.professional), alt: 'Bob Hackney - Telecom' };
   }
   
   // Playbook / Transformation / Business strategy - use Perfectserve leadership photo
@@ -42,31 +80,34 @@ const getImageForResponse = (userInput: string, botResponse: string): { src: str
   }
   
   // Perfectserve - use Perfectserve folder
-  if (input.includes('perfectserve') || input.includes('perfect serve') || input.includes('k1')) {
-    if (input.includes('leadership') || input.includes('leader') || input.includes('company') || input.includes('cto')) {
-      return { src: '/images/Perfectserve/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Perfectserve Leadership' };
-    }
-    return { src: '/images/Perfectserve/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Perfectserve Tech Team' };
+  if (input.includes('perfectserve') || input.includes('perfect serve') || input.includes('k1') || input.includes('arr') || input.includes('ebitda')) {
+    return { src: getRandomPhoto(photoCollections.perfectserve), alt: 'Bob Hackney - Perfectserve' };
   }
   
   // Team / Engineers / Developers
   if (input.includes('team') || input.includes('engineers') || input.includes('developers') || input.includes('staff') || input.includes('offshore') || input.includes('albania')) {
-    return { src: '/images/Perfectserve/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Perfectserve Tech Team' };
+    return { src: '/images/Perfectserve/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Tech Team' };
   }
   
   // Family - use Family folder
   if (input.includes('family') || input.includes('children') || input.includes('kids') || input.includes('mel') || input.includes('greg') || input.includes('robby') || input.includes('hannah') || input.includes('nathan') || input.includes('grandchildren') || input.includes('grandkids')) {
-    return { src: '/images/Family/bob-family.jpg', alt: 'Bob Hackney with Family' };
+    return { src: getRandomPhoto(photoCollections.family), alt: 'Bob Hackney with Family' };
   }
   
-  // Dawn / Wife - use Family folder
+  // Dawn / Wife - use Family folder dawn photos
   if (input.includes('dawn') || input.includes('wife') || input.includes('spouse')) {
-    return { src: '/images/Family/bob-dawn.jpeg', alt: 'Bob Hackney with Dawn' };
+    const dawnPhotos = ['/images/Family/bob-dawn.jpeg', '/images/Family/Bob & Dawn.jpg'];
+    return { src: getRandomPhoto(dawnPhotos), alt: 'Bob Hackney with Dawn' };
   }
   
   // Professional / CTO / Leadership (general) - use Professional folder
   if (input.includes('professional') || input.includes('headshot') || input.includes('cto') || input.includes('leader') || input.includes('leadership')) {
-    return { src: '/images/Professional/bob-professional.jpg', alt: 'Bob Hackney - Professional' };
+    return { src: getRandomPhoto(photoCollections.professional), alt: 'Bob Hackney - Professional' };
+  }
+  
+  // AI / Technology / Cursor / LLM
+  if (input.includes('ai') || input.includes('cursor') || input.includes('llm') || input.includes('machine learning') || input.includes('automation')) {
+    return { src: getRandomPhoto(photoCollections.perfectserve), alt: 'Bob Hackney - Technology' };
   }
   
   return null;
