@@ -179,44 +179,68 @@ const Chatbot: React.FC = () => {
     }
   }, []);
 
-  // Text-to-speech function - 55 year old Marine, direct and to the point
-  const speakText = (text: string) => {
+  // Text-to-speech using ElevenLabs with Bob's custom voice
+  const speakText = async (text: string) => {
     if (!voiceEnabled || typeof window === 'undefined') return;
     
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
+    setIsSpeaking(true);
     
-    const utterance = new SpeechSynthesisUtterance(text);
-    
-    // Marine voice settings: authoritative, direct, no-nonsense
-    utterance.rate = 1.05;    // Slightly faster - direct and to the point
-    utterance.pitch = 0.75;   // Lower pitch - mature, authoritative male voice
-    utterance.volume = 1.0;   // Full volume - confident
-    
-    // Try to find the deepest/most authoritative male voice available
-    const voices = window.speechSynthesis.getVoices();
-    
-    // Priority order for Marine-like voices (deep, authoritative)
-    const preferredVoice = voices.find(voice => 
-      voice.name.includes('Aaron') ||      // Deep male voice
-      voice.name.includes('Fred') ||       // Mature male
-      voice.name.includes('Daniel') ||     // British but authoritative
-      voice.name.includes('Thomas') ||     // German-accented but deep
-      voice.name.includes('Gordon')        // Mature
-    ) || voices.find(voice => 
-      voice.name.includes('Alex') || 
-      voice.name.includes('David') ||
-      voice.name.includes('James') ||
-      voice.name.includes('Male')
-    ) || voices.find(voice => 
-      voice.lang.startsWith('en') && voice.name.toLowerCase().includes('male')
-    ) || voices.find(voice => 
-      voice.lang === 'en-US'
-    );
-    
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
+    try {
+      // Call our ElevenLabs API endpoint
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!response.ok) {
+        throw new Error('TTS request failed');
+      }
+
+      const data = await response.json();
+      
+      // Create audio from base64
+      const audio = new Audio(`data:audio/mpeg;base64,${data.audio}`);
+      
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => {
+        setIsSpeaking(false);
+        // Fallback to browser TTS if ElevenLabs fails
+        fallbackBrowserTTS(text);
+      };
+      
+      // Store audio reference for stop functionality
+      if (typeof window !== 'undefined') {
+        (window as Window & { currentAudio?: HTMLAudioElement }).currentAudio = audio;
+      }
+      
+      await audio.play();
+      
+    } catch (error) {
+      console.error('ElevenLabs TTS error:', error);
+      setIsSpeaking(false);
+      // Fallback to browser TTS
+      fallbackBrowserTTS(text);
     }
+  };
+
+  // Fallback browser TTS if ElevenLabs fails
+  const fallbackBrowserTTS = (text: string) => {
+    if (typeof window === 'undefined') return;
+    
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.05;
+    utterance.pitch = 0.75;
+    utterance.volume = 1.0;
+    
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(voice => 
+      voice.name.includes('Aaron') || voice.name.includes('Daniel') || voice.lang === 'en-US'
+    );
+    if (preferredVoice) utterance.voice = preferredVoice;
     
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
@@ -244,6 +268,13 @@ const Chatbot: React.FC = () => {
   // Stop speaking
   const stopSpeaking = () => {
     if (typeof window !== 'undefined') {
+      // Stop ElevenLabs audio if playing
+      const currentAudio = (window as Window & { currentAudio?: HTMLAudioElement }).currentAudio;
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      // Also stop browser TTS if active
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
     }
