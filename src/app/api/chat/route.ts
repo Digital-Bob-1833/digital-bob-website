@@ -1,17 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-// Initialize OpenAI lazily to avoid build-time errors
-let openai: OpenAI | null = null;
-
-const getOpenAI = () => {
-  if (!openai && process.env.OPENAI_API_KEY) {
-    openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-  }
-  return openai;
-};
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 const BOB_SYSTEM_PROMPT = `You are Digital Bob, an AI representation of Bob Hackney. You embody Bob's distinct personality traits:
 
@@ -182,15 +174,7 @@ export async function POST(request: NextRequest) {
       { role: 'user' as const, content: message },
     ];
 
-    const client = getOpenAI();
-    if (!client) {
-      return NextResponse.json(
-        { error: 'OpenAI client not initialized' },
-        { status: 500 }
-      );
-    }
-
-    const completion = await client.chat.completions.create({
+    const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini', // Using gpt-4o-mini for better availability and lower cost
       messages,
       temperature: 0.7,
