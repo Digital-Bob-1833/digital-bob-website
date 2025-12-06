@@ -12,48 +12,61 @@ interface Message {
   };
 }
 
-// Map topics to relevant images
+// Map topics to relevant images - organized by folder
 const getImageForResponse = (userInput: string, botResponse: string): { src: string; alt: string } | null => {
   const input = (userInput + ' ' + botResponse).toLowerCase();
   
-  // Military / Marine / USMC - use Marine pictures (removed "service" - too generic, conflicts with IaaS/PaaS/SaaS)
+  // Military / Marine / USMC - use Marine folder
   if (input.includes('usmc') || input.includes('marine') || input.includes('military') || input.includes('navy achievement') || input.includes('veteran') || input.includes('overseas deployment')) {
-    return { src: '/images/Marine Vehicle.jpg', alt: 'Bob Hackney - USMC Marine' };
+    return { src: '/images/Marine/Marine Vehicle.jpg', alt: 'Bob Hackney - USMC Marine' };
   }
   
-  // Playbook / Transformation / Business strategy - use leadership photo
+  // DaVita - use DaVita folder
+  if (input.includes('davita') || input.includes('da vita') || input.includes('dialysis') || input.includes('cwow') || input.includes('clinical systems')) {
+    return { src: '/images/DaVita/davita.jpg', alt: 'Bob Hackney - DaVita' };
+  }
+  
+  // SitusAMC - use SitusAMC folder
+  if (input.includes('situsamc') || input.includes('situs') || input.includes('stonepoint') || input.includes('real estate finance')) {
+    return { src: '/images/SitusAMC/situsamc.jpg', alt: 'Bob Hackney - SitusAMC' };
+  }
+  
+  // Telecom - use Telecom folder
+  if (input.includes('telecom') || input.includes('billing') || input.includes('ericsson') || input.includes('nortel') || input.includes('motorola') || input.includes('prepaid')) {
+    return { src: '/images/Telecom/telecom.jpg', alt: 'Bob Hackney - Telecom' };
+  }
+  
+  // Playbook / Transformation / Business strategy - use Perfectserve leadership photo
   if (input.includes('playbook') || input.includes('transform') || input.includes('private equity') || input.includes('strategy')) {
-    return { src: '/images/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Leadership & Strategy' };
+    return { src: '/images/Perfectserve/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Leadership & Strategy' };
   }
   
-  // Perfectserve - use Perfectserve pictures
-  if (input.includes('perfectserve') || input.includes('perfect serve')) {
-    // Use leadership photo for leadership/company topics
+  // Perfectserve - use Perfectserve folder
+  if (input.includes('perfectserve') || input.includes('perfect serve') || input.includes('k1')) {
     if (input.includes('leadership') || input.includes('leader') || input.includes('company') || input.includes('cto')) {
-      return { src: '/images/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Perfectserve Leadership' };
+      return { src: '/images/Perfectserve/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Perfectserve Leadership' };
     }
-    // Use team photo for team/engineering topics
-    return { src: '/images/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Perfectserve Tech Team' };
+    return { src: '/images/Perfectserve/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Perfectserve Tech Team' };
   }
   
   // Team / Engineers / Developers
-  if (input.includes('team') || input.includes('engineers') || input.includes('developers') || input.includes('staff')) {
-    return { src: '/images/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Perfectserve Tech Team' };
+  if (input.includes('team') || input.includes('engineers') || input.includes('developers') || input.includes('staff') || input.includes('offshore') || input.includes('albania')) {
+    return { src: '/images/Perfectserve/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Perfectserve Tech Team' };
   }
   
-  // Family
-  if (input.includes('family') || input.includes('children') || input.includes('kids') || input.includes('mel') || input.includes('greg') || input.includes('robby') || input.includes('hannah') || input.includes('nathan')) {
-    return { src: '/images/bob-family.jpg', alt: 'Bob Hackney with Family' };
+  // Family - use Family folder
+  if (input.includes('family') || input.includes('children') || input.includes('kids') || input.includes('mel') || input.includes('greg') || input.includes('robby') || input.includes('hannah') || input.includes('nathan') || input.includes('grandchildren') || input.includes('grandkids')) {
+    return { src: '/images/Family/bob-family.jpg', alt: 'Bob Hackney with Family' };
   }
   
-  // Dawn / Wife
+  // Dawn / Wife - use Family folder
   if (input.includes('dawn') || input.includes('wife') || input.includes('spouse')) {
-    return { src: '/images/bob-dawn.jpeg', alt: 'Bob Hackney with Dawn' };
+    return { src: '/images/Family/bob-dawn.jpeg', alt: 'Bob Hackney with Dawn' };
   }
   
-  // Professional / CTO / Leadership (general)
+  // Professional / CTO / Leadership (general) - use Professional folder
   if (input.includes('professional') || input.includes('headshot') || input.includes('cto') || input.includes('leader') || input.includes('leadership')) {
-    return { src: '/images/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Leadership' };
+    return { src: '/images/Professional/bob-professional.jpg', alt: 'Bob Hackney - Professional' };
   }
   
   return null;
@@ -65,7 +78,7 @@ const Chatbot: React.FC = () => {
       text: "Hey, I'm Bob Hackney - CTO, former Marine, and proud family man. I don't waste time with small talk, so let's get to it. What do you want to know about my experience, leadership approach, or what we're building at Perfectserve?",
       sender: 'bot',
       image: {
-        src: '/images/bob-professional.jpg',
+        src: '/images/Professional/bob-professional.jpg',
         alt: 'Bob Hackney - Professional'
       }
     }
