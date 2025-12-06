@@ -16,17 +16,39 @@ interface Message {
 const getImageForResponse = (userInput: string, botResponse: string): { src: string; alt: string } | null => {
   const input = (userInput + ' ' + botResponse).toLowerCase();
   
+  // Military / Marine / USMC - use Marine pictures
+  if (input.includes('usmc') || input.includes('marine') || input.includes('military') || input.includes('corps') || input.includes('service') || input.includes('veteran')) {
+    return { src: '/images/Marine Vehicle.jpg', alt: 'Bob Hackney - USMC Marine' };
+  }
+  
+  // Perfectserve - use Perfectserve pictures (alternate between them)
+  if (input.includes('perfectserve') || input.includes('perfect serve')) {
+    // Use leadership photo for leadership/company topics
+    if (input.includes('leadership') || input.includes('leader') || input.includes('company') || input.includes('cto')) {
+      return { src: '/images/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Perfectserve Leadership' };
+    }
+    // Use team photo for team/engineering topics
+    return { src: '/images/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Perfectserve Tech Team' };
+  }
+  
+  // Team / Engineers / Developers
+  if (input.includes('team') || input.includes('engineers') || input.includes('developers') || input.includes('staff')) {
+    return { src: '/images/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Perfectserve Tech Team' };
+  }
+  
+  // Family
   if (input.includes('family') || input.includes('children') || input.includes('kids') || input.includes('mel') || input.includes('greg') || input.includes('robby') || input.includes('hannah') || input.includes('nathan')) {
     return { src: '/images/bob-family.jpg', alt: 'Bob Hackney with Family' };
   }
+  
+  // Dawn / Wife
   if (input.includes('dawn') || input.includes('wife') || input.includes('spouse')) {
     return { src: '/images/bob-dawn.jpeg', alt: 'Bob Hackney with Dawn' };
   }
-  if (input.includes('team') || input.includes('perfectserve') || input.includes('engineers') || input.includes('developers') || input.includes('staff')) {
-    return { src: '/images/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Perfectserve Tech Team' };
-  }
-  if (input.includes('professional') || input.includes('headshot') || input.includes('cto') || input.includes('leader')) {
-    return { src: '/images/bob-professional.jpg', alt: 'Bob Hackney - Professional' };
+  
+  // Professional / CTO / Leadership (general)
+  if (input.includes('professional') || input.includes('headshot') || input.includes('cto') || input.includes('leader') || input.includes('leadership')) {
+    return { src: '/images/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Leadership' };
   }
   
   return null;
