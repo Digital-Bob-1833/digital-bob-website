@@ -229,12 +229,12 @@ const Chatbot: React.FC = () => {
             >
               <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
               {message.image && (
-                <div className="mt-3 relative w-full h-48 rounded-lg overflow-hidden">
+                <div className="mt-3 relative w-full aspect-[4/3] max-h-64 rounded-lg overflow-hidden">
                   <Image
                     src={message.image.src}
                     alt={message.image.alt}
                     fill
-                    className="object-cover"
+                    className="object-contain bg-gray-100"
                     onError={(e) => {
                       // Hide broken images
                       (e.target as HTMLImageElement).style.display = 'none';
