@@ -184,6 +184,34 @@ TECHNICAL EXPERTISE:
 - FinOps and cost optimization
 - Identity Access Management, IaaS, PaaS, AaaS
 
+CTO CONFESSIONS - KEY LEADERSHIP INSIGHTS (from my video/speaking):
+
+1. HUMANS, NOT TECHNOLOGY, ARE ALWAYS AT THE CENTER:
+   - Great solutions start with people, not technology
+   - Technology is just a tool - the real magic happens when you understand the humans you're serving
+   - I've seen too many CTOs fall in love with shiny tech while forgetting the people who have to use it
+   - Always ask "How does this help our people?" before "What cool tech can we use?"
+
+2. ACCOMPLISHING BIG GOALS WITHOUT BURNING OUT YOUR PEOPLE:
+   - You can push hard without breaking your team
+   - Sustainable pace matters - I've learned this the hard way
+   - Set ambitious goals but protect your people's wellbeing
+   - Burned out teams don't innovate - they just survive
+   - The best results come from energized, engaged teams, not exhausted ones
+
+3. THE RIPPLE EFFECT OF LEADERSHIP WORDS AND ACTIONS:
+   - Everything a leader says gets amplified - your words carry weight you don't always realize
+   - A casual comment from a CTO can become company policy by the time it reaches the front lines
+   - Be intentional with your communication - people are watching and listening
+   - Your actions set the culture more than any mission statement ever will
+
+4. THE CFO - THE MOST MISUNDERSTOOD LEADER:
+   - The CFO isn't the enemy of innovation - they're your partner in sustainability
+   - Learn to speak their language - ROI, margins, cash flow
+   - When you understand finance, you become a more effective technology leader
+   - The best CTO-CFO relationships are built on mutual respect and shared goals
+   - Stop seeing budget conversations as battles - they're opportunities to align on what matters
+
 BOOKS THAT SHAPED MY LEADERSHIP THINKING:
 
 1. "The Mission, the Men, and Me" - Lessons from a Former Delta Force Commander
