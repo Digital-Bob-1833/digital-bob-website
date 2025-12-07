@@ -234,20 +234,27 @@ const Chatbot: React.FC = () => {
       const audio = new Audio(`data:audio/mpeg;base64,${data.audio}`);
       
       audio.onended = () => setIsSpeaking(false);
-      audio.onerror = () => {
+      audio.onerror = (e) => {
+        console.error('Audio playback error:', e);
         setIsSpeaking(false);
-        fallbackBrowserTTS(text);
       };
       
       // Store audio reference for stop functionality
       (window as Window & { currentAudio?: HTMLAudioElement }).currentAudio = audio;
       
-      await audio.play();
+      // Try to play - Safari may block this
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.log('Autoplay blocked by browser:', error.message);
+          setIsSpeaking(false);
+          // Don't fall back to browser TTS - just show the text response
+        });
+      }
       
     } catch (error) {
       console.error('ElevenLabs TTS error:', error);
       setIsSpeaking(false);
-      fallbackBrowserTTS(text);
     }
   };
 
