@@ -156,6 +156,7 @@ const Chatbot: React.FC = () => {
     }
   ]);
   const [input, setInput] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -546,7 +547,9 @@ const Chatbot: React.FC = () => {
           </button>
           
           <input
+            ref={inputRef}
             type="text"
+            id="chat-input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isLoading}
