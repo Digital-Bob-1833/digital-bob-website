@@ -29,7 +29,7 @@ export default function Home() {
             <p className="text-blue-300 mt-1">Bob Hackney</p>
             <div className="flex items-center justify-center gap-2 mt-3 flex-wrap">
               <span className="px-3 py-1 bg-blue-500/20 text-blue-300 text-sm rounded-full border border-blue-500/30">CTO/CPO</span>
-              <span className="px-3 py-1 bg-green-500/20 text-green-300 text-sm rounded-full border border-green-500/30">Marine</span>
+              <span className="px-3 py-1 bg-green-500/20 text-green-300 text-sm rounded-full border border-green-500/30">US Marine</span>
             </div>
             <p className="text-slate-400 text-sm mt-4 max-w-[280px]">
               2025 ORBIE Finalist • 25+ years tech leadership
@@ -86,7 +86,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">Digital Bob</h1>
-              <p className="text-blue-300 text-sm">CTO/CPO • Marine • PE Value Creator</p>
+              <p className="text-blue-300 text-sm">CTO/CPO • US Marine • PE Value Creator</p>
             </div>
           </div>
 
