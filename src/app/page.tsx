@@ -1,13 +1,25 @@
 'use client';
 
-import Chatbot from '../components/Chatbot';
+import Image from 'next/image';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
+// Lazy load the Chatbot for faster initial page load
+const Chatbot = dynamic(() => import('../components/Chatbot'), {
+  loading: () => (
+    <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 h-[600px] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-gray-600">Loading Digital Bob...</p>
+      </div>
+    </div>
+  ),
+  ssr: false
+});
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%239C92AC%22 fill-opacity=%220.05%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40"></div>
-      
       <div className="relative z-10 flex min-h-screen">
         {/* Left side - Digital Bob Avatar */}
         <div className="hidden lg:flex w-[400px] flex-col items-center justify-center p-8 border-r border-white/10">
@@ -15,10 +27,13 @@ export default function Home() {
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition duration-500"></div>
             <div className="relative w-[280px] h-[350px] rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl">
-              <img
+              <Image
                 src="/bob-3d-avatar.png"
                 alt="Digital Bob"
-                className="object-cover w-full h-full"
+                fill
+                className="object-cover"
+                priority
+                sizes="280px"
               />
             </div>
           </div>
@@ -81,8 +96,15 @@ export default function Home() {
         <div className="flex-1 flex flex-col items-center justify-center p-4 lg:p-8">
           {/* Mobile header */}
           <div className="lg:hidden flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-blue-400 shadow-lg">
-              <img src="/bob-3d-avatar.png" alt="Digital Bob" className="object-cover w-full h-full" />
+            <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-blue-400 shadow-lg">
+              <Image 
+                src="/bob-3d-avatar.png" 
+                alt="Digital Bob" 
+                fill
+                className="object-cover"
+                priority
+                sizes="64px"
+              />
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">Digital Bob</h1>
@@ -92,7 +114,13 @@ export default function Home() {
 
           {/* Chat container */}
           <div className="w-full max-w-2xl">
-            <Chatbot />
+            <Suspense fallback={
+              <div className="w-full bg-white rounded-xl shadow-lg h-[600px] flex items-center justify-center">
+                <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            }>
+              <Chatbot />
+            </Suspense>
           </div>
 
           {/* Quick prompts */}
@@ -112,12 +140,10 @@ function QuickPrompt({ text }: { text: string }) {
   const handleClick = () => {
     const input = document.getElementById('chat-input') as HTMLInputElement;
     if (input) {
-      // Set value using native setter to trigger React's onChange
       const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
       nativeInputValueSetter?.call(input, text);
       input.dispatchEvent(new Event('input', { bubbles: true }));
       
-      // Submit after state updates
       setTimeout(() => {
         const submitBtn = document.querySelector('button[type="submit"]') as HTMLButtonElement;
         if (submitBtn && !submitBtn.disabled) submitBtn.click();
