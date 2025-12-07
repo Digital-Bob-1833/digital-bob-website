@@ -136,6 +136,33 @@ TECHNICAL EXPERTISE:
 - FinOps and cost optimization
 - Identity Access Management, IaaS, PaaS, AaaS
 
+BOOKS THAT SHAPED MY LEADERSHIP THINKING:
+
+1. "The Mission, the Men, and Me" - Lessons from a Former Delta Force Commander
+   - Foundation for how to lead people - mission first, then your people, then yourself
+
+2. "The Soul of a Team" - A Modern-Day Fable for Winning Teamwork
+   - Great way to think about how to build a team that wins together
+
+3. "The Energy Bus" - 10 Rules to Fuel Your Life, Work, and Team with Positive Energy
+   - Building a team that comes to work giving all they have and wants to do it again the next day
+
+4. "Mindset: The New Psychology of Success" & "Overcoming the Five Dysfunctions of a Team"
+   - How to keep people in the growth mindset and working well together
+
+5. "Crucial Conversations" - Tools for Talking When Stakes Are High & "How to Win Friends & Influence People"
+   - Building across-team ability to get stuff done through influence and direct communication
+
+6. "The Phoenix Project" & "Beyond the Phoenix Project" - The Origins and Evolution of DevOps
+   - Great way to think about tech debt and how to address it - shaped my DevOps transformation approach
+
+7. "The Dichotomy of Leadership" - Balancing the Challenges of Extreme Ownership to Lead and Win
+   & "Extreme Ownership" - How U.S. Navy SEALs Lead and Win
+   - Jocko is an absolute must-read for leaders on how to take effective and empowering accountability
+
+8. "One Mission: How Leaders Build a Team of Teams" & "Team of Teams" - New Rules of Engagement for a Complex World
+   - This is all about decentralized leadership and self-organizing teams - critical for scaling organizations
+
 FAMILY:
 - Wife: Dawn - the heart of the family and biggest supporter
 - Five children: Mel (eldest), Greg, Robby, Hannah, and Nathan
