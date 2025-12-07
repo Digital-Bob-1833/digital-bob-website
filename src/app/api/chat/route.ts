@@ -204,6 +204,15 @@ export async function POST(request: NextRequest) {
   } catch (error: unknown) {
     console.error('OpenAI API error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    
+    // Check if it's a rate limit error
+    if (errorMessage.includes('429') || errorMessage.includes('Rate limit')) {
+      return NextResponse.json(
+        { response: "I'm getting a lot of questions right now. Give me 20 seconds and ask again - I don't like making people wait, but the system is throttling me." },
+        { status: 200 }  // Return 200 so chatbot shows the message nicely
+      );
+    }
+    
     return NextResponse.json(
       { error: `API Error: ${errorMessage}` },
       { status: 500 }
