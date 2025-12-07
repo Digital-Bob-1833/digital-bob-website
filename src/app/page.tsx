@@ -27,17 +27,37 @@ export default function Home() {
           <div className="mt-6 text-center">
             <h1 className="text-3xl font-bold text-white tracking-tight">Digital Bob</h1>
             <p className="text-blue-300 mt-1">Bob Hackney</p>
-            <div className="flex items-center justify-center gap-2 mt-3">
-              <span className="px-3 py-1 bg-blue-500/20 text-blue-300 text-sm rounded-full border border-blue-500/30">CTO</span>
+            <div className="flex items-center justify-center gap-2 mt-3 flex-wrap">
+              <span className="px-3 py-1 bg-blue-500/20 text-blue-300 text-sm rounded-full border border-blue-500/30">CTO/CPO</span>
               <span className="px-3 py-1 bg-green-500/20 text-green-300 text-sm rounded-full border border-green-500/30">Marine</span>
             </div>
-            <p className="text-slate-400 text-sm mt-4 max-w-[250px]">
+            <p className="text-slate-400 text-sm mt-4 max-w-[280px]">
               2025 ORBIE Finalist • 25+ years tech leadership
             </p>
           </div>
 
+          {/* Expertise areas */}
+          <div className="mt-6 space-y-2 w-full max-w-[300px]">
+            <div className="flex items-start gap-2 text-left">
+              <span className="text-cyan-400 mt-0.5">▸</span>
+              <p className="text-slate-300 text-sm">Value Creation in PE-backed organizations</p>
+            </div>
+            <div className="flex items-start gap-2 text-left">
+              <span className="text-cyan-400 mt-0.5">▸</span>
+              <p className="text-slate-300 text-sm">15+ Data Center migrations into AWS & GCP</p>
+            </div>
+            <div className="flex items-start gap-2 text-left">
+              <span className="text-cyan-400 mt-0.5">▸</span>
+              <p className="text-slate-300 text-sm">Cloud Operational Transformation</p>
+            </div>
+            <div className="flex items-start gap-2 text-left">
+              <span className="text-cyan-400 mt-0.5">▸</span>
+              <p className="text-slate-300 text-sm">SRE & FinOps Evangelist</p>
+            </div>
+          </div>
+
           {/* Quick stats */}
-          <div className="mt-8 grid grid-cols-2 gap-3 w-full max-w-[280px]">
+          <div className="mt-6 grid grid-cols-2 gap-3 w-full max-w-[300px]">
             <div className="bg-white/5 rounded-lg p-3 text-center border border-white/10">
               <p className="text-2xl font-bold text-white">$103M</p>
               <p className="text-xs text-slate-400">ARR Growth</p>
@@ -45,6 +65,14 @@ export default function Home() {
             <div className="bg-white/5 rounded-lg p-3 text-center border border-white/10">
               <p className="text-2xl font-bold text-white">133%</p>
               <p className="text-xs text-slate-400">R&D Velocity</p>
+            </div>
+            <div className="bg-white/5 rounded-lg p-3 text-center border border-white/10">
+              <p className="text-2xl font-bold text-white">15+</p>
+              <p className="text-xs text-slate-400">Cloud Migrations</p>
+            </div>
+            <div className="bg-white/5 rounded-lg p-3 text-center border border-white/10">
+              <p className="text-2xl font-bold text-white">25+</p>
+              <p className="text-xs text-slate-400">Years Leadership</p>
             </div>
           </div>
         </div>
@@ -58,7 +86,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">Digital Bob</h1>
-              <p className="text-blue-300 text-sm">CTO • Marine • Leader</p>
+              <p className="text-blue-300 text-sm">CTO/CPO • Marine • PE Value Creator</p>
             </div>
           </div>
 
