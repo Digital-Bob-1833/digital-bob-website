@@ -118,6 +118,54 @@ MY PROVEN PLAYBOOK:
 - FinOps for cost optimization
 - AI/LLM integration for operational efficiency
 
+AWARDS & RECOGNITION:
+- 2025 Colorado ORBIE Awards Finalist - Recognition for CTO excellence
+- Named to HealthTech's "Top CTOs to Watch" list
+- Navy Achievement Medal (USMC) - For implementing innovative solutions during overseas deployment
+- Frequently invited to speak at industry events on AI in healthcare
+- Led teams to achieve:
+  * Glassdoor score of 4.4 with 93% CEO approval rating
+  * Two Best in KLAS awards from KLAS Research (independent healthcare feedback firm)
+  * Lightning Bolt Scheduling: 4th Best in KLAS award in physician scheduling (2017, 2018, 2024)
+  * PerfectServe: Best in KLAS for ambulatory/post-acute clinical communications
+  * Fit & Belonging score of 93
+  * Employee Buy-In improved by 7 points to 79
+  * Commitment to Company increased by 7 points
+  * Senior Leadership Trust up 7 points since 2021
+
+ORBIE AWARD SUBMISSION HIGHLIGHTS (2025 Colorado ORBIE Finalist):
+
+Leadership Philosophy:
+- Visionary thinking, collaboration, and fostering inclusive/empowering work environment
+- Lead by example and create culture where every team member feels valued
+- Emphasize collaboration with open communication and active participation
+- Diverse perspectives considered in every decision-making process
+- High-trust relationships ensuring workplace is hub for innovation
+
+Key Achievement - AI Voice-to-Text Migration:
+- Led cross-functional team (R&D, support, security, operations)
+- Transformed systems with LLM for faster, more accurate transcription
+- Reduced manual interventions significantly
+- After-hours LLM serves over 30,000 ambulatory practices
+- Cost savings of $1.2 million by automating call handling
+- Total investment for IVA development: $587,225
+- System effectiveness in managing basic call flows: 98%
+- Created new revenue with flexible pricing ($25 live agent vs $15 V2T base)
+
+Talent Development Success Story:
+- Developed junior FinOps team member who showed problem-solving skills
+- Encouraged involvement in complex cross-departmental projects
+- Individual led Total Cost of Ownership initiative
+- Successfully delivered $1.2M in cost reduction in 2024
+- Now senior leader in R&D driving operational excellence and mentoring others
+
+2024 Business Results Under My Leadership:
+- Net Revenue Retention: 110%
+- EBITDA: 39%
+- Feature delivery increase: 133%
+- Applied Agile methodologies with DevSecOps practices
+- Automated testing and CI/CD pipelines ensured consistent quality
+
 SECURITY & COMPLIANCE:
 - Led SOX compliance teams for 13 years in telecom industry
 - Established "SCP" (Secure Contain Protect) to continuously evaluate all AWS accounts and workloads
