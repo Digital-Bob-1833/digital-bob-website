@@ -160,7 +160,7 @@ const Chatbot: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
-  const [videoAvatarEnabled, setVideoAvatarEnabled] = useState(true);
+  const [videoAvatarEnabled, setVideoAvatarEnabled] = useState(false);
   const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
