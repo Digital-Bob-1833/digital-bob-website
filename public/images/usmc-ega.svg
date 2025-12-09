@@ -1,73 +1,97 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
   <defs>
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#FFD700"/>
-      <stop offset="50%" style="stop-color:#DAA520"/>
-      <stop offset="100%" style="stop-color:#B8860B"/>
+    <linearGradient id="goldShine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4AF37"/>
+      <stop offset="50%" style="stop-color:#C5A028"/>
+      <stop offset="100%" style="stop-color:#B8960F"/>
     </linearGradient>
   </defs>
   
-  <!-- Outer gold ring -->
-  <circle cx="100" cy="100" r="98" fill="#DAA520" stroke="#B8860B" stroke-width="2"/>
+  <!-- Outer gold border -->
+  <circle cx="100" cy="100" r="99" fill="#C5A028" stroke="#8B7500" stroke-width="1"/>
   
-  <!-- Red inner circle -->
-  <circle cx="100" cy="100" r="88" fill="#8B0000"/>
+  <!-- Black ring -->
+  <circle cx="100" cy="100" r="95" fill="#1a1a1a"/>
   
   <!-- Inner gold ring -->
-  <circle cx="100" cy="100" r="78" fill="none" stroke="#DAA520" stroke-width="3"/>
+  <circle cx="100" cy="100" r="70" fill="#C5A028"/>
   
-  <!-- Text path for "UNITED STATES" at top -->
+  <!-- Red (scarlet) center -->
+  <circle cx="100" cy="100" r="66" fill="#B22234"/>
+  
+  <!-- Text: UNITED STATES (top arc) -->
   <defs>
-    <path id="topArc" d="M 30,100 A 70,70 0 0,1 170,100" fill="none"/>
-    <path id="bottomArc" d="M 170,100 A 70,70 0 0,1 30,100" fill="none"/>
+    <path id="topTextPath" d="M 25,100 A 75,75 0 0,1 175,100" fill="none"/>
   </defs>
-  
-  <text fill="#DAA520" font-family="Arial Black, sans-serif" font-size="14" font-weight="bold">
-    <textPath href="#topArc" startOffset="50%" text-anchor="middle">UNITED STATES</textPath>
+  <text fill="#E8DCC4" font-family="Arial, sans-serif" font-size="18" font-weight="bold" letter-spacing="3">
+    <textPath href="#topTextPath" startOffset="50%" text-anchor="middle">UNITED STATES</textPath>
   </text>
   
-  <text fill="#DAA520" font-family="Arial Black, sans-serif" font-size="14" font-weight="bold">
-    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">MARINE CORPS</textPath>
+  <!-- Text: MARINE CORPS (bottom arc) -->
+  <defs>
+    <path id="bottomTextPath" d="M 175,108 A 75,75 0 0,1 25,108" fill="none"/>
+  </defs>
+  <text fill="#E8DCC4" font-family="Arial, sans-serif" font-size="18" font-weight="bold" letter-spacing="2">
+    <textPath href="#bottomTextPath" startOffset="50%" text-anchor="middle">MARINE CORPS</textPath>
   </text>
   
-  <!-- EGA - Eagle -->
-  <g fill="#DAA520" stroke="#B8860B" stroke-width="0.5">
-    <!-- Eagle body -->
-    <ellipse cx="100" cy="58" rx="12" ry="8"/>
-    <!-- Eagle head -->
-    <circle cx="100" cy="50" r="6"/>
-    <!-- Beak -->
-    <path d="M94 50 L88 52 L94 51 Z"/>
+  <!-- Eagle Wings -->
+  <g fill="#C5A028" stroke="#8B7500" stroke-width="0.5">
     <!-- Left wing -->
-    <path d="M88 58 Q60 50 45 70 Q55 62 65 60 Q55 68 50 78 Q60 68 72 64 Q62 74 58 85 Q70 72 85 68 L88 62 Z"/>
-    <!-- Right wing -->
-    <path d="M112 58 Q140 50 155 70 Q145 62 135 60 Q145 68 150 78 Q140 68 128 64 Q138 74 142 85 Q130 72 115 68 L112 62 Z"/>
+    <path d="M100 52 
+             Q85 48 70 52 Q55 56 42 68 
+             Q50 62 58 60 Q50 66 44 76 
+             Q54 68 64 66 Q56 74 52 84 
+             Q64 74 76 72 Q70 78 68 86
+             Q78 78 88 76 L100 60 Z"/>
+    <!-- Right wing (mirrored) -->
+    <path d="M100 52 
+             Q115 48 130 52 Q145 56 158 68 
+             Q150 62 142 60 Q150 66 156 76 
+             Q146 68 136 66 Q144 74 148 84 
+             Q136 74 124 72 Q130 78 132 86
+             Q122 78 112 76 L100 60 Z"/>
   </g>
+  
+  <!-- Eagle Head -->
+  <ellipse cx="100" cy="48" rx="8" ry="6" fill="#C5A028" stroke="#8B7500" stroke-width="0.5"/>
+  <!-- Eagle Beak -->
+  <path d="M92 48 L86 50 L92 49 Z" fill="#8B0000"/>
+  
+  <!-- Semper Fidelis Banner -->
+  <rect x="82" y="42" width="36" height="8" rx="1" fill="#E8E8E8" stroke="#888" stroke-width="0.5"/>
+  <text x="100" y="48" fill="#333" font-family="Times, serif" font-size="5" font-style="italic" text-anchor="middle">Semper Fidelis</text>
   
   <!-- Globe -->
-  <g fill="none" stroke="#DAA520" stroke-width="2">
-    <circle cx="100" cy="95" r="22"/>
-    <ellipse cx="100" cy="95" rx="22" ry="8"/>
-    <ellipse cx="100" cy="95" rx="8" ry="22"/>
-    <line x1="78" y1="95" x2="122" y2="95"/>
-  </g>
+  <circle cx="100" cy="95" r="28" fill="#E8E8E8" stroke="#C5A028" stroke-width="2"/>
+  <!-- Globe lines -->
+  <ellipse cx="100" cy="95" rx="28" ry="10" fill="none" stroke="#666" stroke-width="1"/>
+  <path d="M100 67 L100 123" stroke="#666" stroke-width="1"/>
+  <path d="M72 95 L128 95" stroke="#666" stroke-width="1"/>
+  <!-- Americas landmass -->
+  <path d="M95 72 Q92 78 94 85 Q90 88 88 95 Q86 102 90 110 Q94 116 98 118
+           M102 72 Q108 76 110 82 Q114 88 112 95 Q115 100 112 108" 
+        fill="#8B7500" stroke="none"/>
   
   <!-- Anchor -->
-  <g fill="#DAA520" stroke="#B8860B" stroke-width="0.5">
-    <!-- Anchor ring -->
-    <circle cx="100" cy="118" r="5" fill="none" stroke="#DAA520" stroke-width="3"/>
-    <!-- Anchor shaft -->
-    <rect x="97" y="123" width="6" height="30" rx="1"/>
-    <!-- Anchor arms -->
-    <path d="M85 148 Q100 158 115 148 L112 153 Q100 162 88 153 Z"/>
-    <!-- Anchor flukes -->
-    <path d="M82 150 L78 158 L88 152 Z"/>
-    <path d="M118 150 L122 158 L112 152 Z"/>
-    <!-- Crossbar -->
-    <rect x="88" y="130" width="24" height="4" rx="1"/>
+  <g fill="#C5A028" stroke="#8B7500" stroke-width="0.5">
+    <!-- Anchor ring at top -->
+    <circle cx="100" cy="125" r="6" fill="none" stroke="#C5A028" stroke-width="3"/>
+    <!-- Anchor shank -->
+    <rect x="96" y="131" width="8" height="28" rx="2"/>
+    <!-- Anchor stock (crossbar) -->
+    <rect x="84" y="136" width="32" height="5" rx="1"/>
+    <!-- Anchor crown and arms -->
+    <path d="M84 155 Q100 168 116 155 L114 160 Q100 172 86 160 Z"/>
+    <!-- Left fluke -->
+    <path d="M80 158 L74 168 L86 160 Z"/>
+    <!-- Right fluke -->
+    <path d="M120 158 L126 168 L114 160 Z"/>
   </g>
   
   <!-- Rope around anchor -->
-  <path d="M95 125 Q85 135 90 145 Q95 140 97 148" fill="none" stroke="#DAA520" stroke-width="2"/>
-  <path d="M105 125 Q115 135 110 145 Q105 140 103 148" fill="none" stroke="#DAA520" stroke-width="2"/>
+  <g fill="none" stroke="#E8E8E8" stroke-width="3" stroke-linecap="round">
+    <path d="M94 128 Q82 138 86 150 Q88 155 92 158"/>
+    <path d="M106 128 Q118 138 114 150 Q112 155 108 158"/>
+  </g>
 </svg>
