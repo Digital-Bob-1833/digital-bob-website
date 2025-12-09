@@ -1,7 +1,35 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+
+// Generate or retrieve session ID
+const getSessionId = (): string => {
+  if (typeof window === 'undefined') return 'server';
+  let sessionId = sessionStorage.getItem('bob_session_id');
+  if (!sessionId) {
+    sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    sessionStorage.setItem('bob_session_id', sessionId);
+  }
+  return sessionId;
+};
+
+// Track analytics event
+const trackEvent = async (type: string, data?: Record<string, unknown>) => {
+  try {
+    await fetch('/api/analytics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type,
+        sessionId: getSessionId(),
+        data,
+      }),
+    });
+  } catch (error) {
+    console.error('Analytics tracking error:', error);
+  }
+};
 
 interface Message {
   text: string;
@@ -49,7 +77,7 @@ const photoCollections = {
 // Get random photo from a collection
 const getRandomPhoto = (collection: string[]): string => {
   return collection[Math.floor(Math.random() * collection.length)];
-};
+  };
 
 // Map topics to relevant images
 const getImageForResponse = (userInput: string, botResponse: string): { src: string; alt: string } | null => {
@@ -84,12 +112,11 @@ const getImageForResponse = (userInput: string, botResponse: string): { src: str
   }
   
   if (input.includes('family') || input.includes('children') || input.includes('kids') || input.includes('mel') || input.includes('greg') || input.includes('robby') || input.includes('hannah') || input.includes('nathan') || input.includes('grandchildren') || input.includes('grandkids')) {
-    return { src: '/images/Family/bob-family.jpg', alt: 'Bob Hackney with Family' };
+    return { src: '/images/Family/Family.jpg', alt: 'Bob Hackney with Family' };
   }
   
   if (input.includes('dawn') || input.includes('wife') || input.includes('spouse')) {
-    const dawnPhotos = ['/images/Family/bob-dawn.jpeg', '/images/Family/Bob & Dawn.jpg'];
-    return { src: getRandomPhoto(dawnPhotos), alt: 'Bob Hackney with Dawn' };
+    return { src: '/images/Family/Bob & Dawn.jpg', alt: 'Bob Hackney with Dawn' };
   }
   
   if (input.includes('professional') || input.includes('headshot') || input.includes('cto') || input.includes('leader') || input.includes('leadership')) {
@@ -158,6 +185,7 @@ const Chatbot: React.FC = () => {
   const [input, setInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
@@ -174,6 +202,11 @@ const Chatbot: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Track page view on mount
+  useEffect(() => {
+    trackEvent('page_view');
+  }, []);
 
   // Initialize speech recognition with auto-submit
   useEffect(() => {
@@ -210,10 +243,11 @@ const Chatbot: React.FC = () => {
   }, []);
 
   // Text-to-speech using ElevenLabs
-  const speakText = async (text: string) => {
+  const speakText = useCallback(async (text: string) => {
     if (!voiceEnabled || typeof window === 'undefined') return;
     
     setIsSpeaking(true);
+    trackEvent('tts_played');
     
     try {
       const response = await fetch('/api/tts', {
@@ -251,13 +285,13 @@ const Chatbot: React.FC = () => {
           setIsSpeaking(false);
           // Don't fall back to browser TTS - just show the text response
         });
-      }
-      
+    }
+
     } catch (error) {
       console.error('ElevenLabs TTS error:', error);
       setIsSpeaking(false);
     }
-  };
+  }, [voiceEnabled]);
 
   // Fallback browser TTS
   const fallbackBrowserTTS = (text: string) => {
@@ -295,6 +329,7 @@ const Chatbot: React.FC = () => {
     } else {
       recognitionRef.current.start();
       setIsListening(true);
+      trackEvent('voice_input');
     }
   };
 
@@ -325,6 +360,10 @@ const Chatbot: React.FC = () => {
     setInput('');
     setIsLoading(true);
 
+    // Add placeholder bot message for streaming
+    const botMessageIndex = messages.length + 1;
+    setMessages(prev => [...prev, { text: '', sender: 'bot' }]);
+
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -333,64 +372,119 @@ const Chatbot: React.FC = () => {
         },
         body: JSON.stringify({
           message: currentInput,
-          conversationHistory: messages,
+          conversationHistory: messages.slice(-6), // Only send recent history
+          stream: true,
         }),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error('Response not ok');
+      }
 
-      if (response.ok) {
-        const image = getImageForResponse(currentInput, data.response);
-        
-        // Try to generate video avatar if enabled
-        let videoUrl: string | undefined;
-        if (videoAvatarEnabled && voiceEnabled) {
-          setIsGeneratingVideo(true);
-          try {
-            const videoResponse = await fetch('/api/video-avatar', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ text: data.response }),
-            });
-            
-            if (videoResponse.ok) {
-              const videoData = await videoResponse.json();
-              videoUrl = videoData.videoUrl;
+      // Handle streaming response
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullResponse = '';
+      setIsStreaming(true);
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') continue;
+              
+              try {
+                const parsed = JSON.parse(data);
+                if (parsed.content) {
+                  fullResponse += parsed.content;
+                  // Update the bot message in real-time
+                  setMessages(prev => {
+                    const updated = [...prev];
+                    updated[botMessageIndex] = { 
+                      text: fullResponse, 
+                      sender: 'bot' 
+                    };
+                    return updated;
+                  });
+                }
+              } catch {
+                // Skip malformed JSON chunks
+              }
             }
-          } catch (videoError) {
-            console.error('Video avatar error:', videoError);
           }
-          setIsGeneratingVideo(false);
         }
-        
-        const botMessage: Message = {
-          text: data.response,
+      }
+
+      setIsStreaming(false);
+      
+      // After streaming is complete, add image and trigger TTS
+      const image = getImageForResponse(currentInput, fullResponse);
+      
+      // Try to generate video avatar if enabled
+      let videoUrl: string | undefined;
+      if (videoAvatarEnabled && voiceEnabled && fullResponse) {
+        setIsGeneratingVideo(true);
+        try {
+          const videoResponse = await fetch('/api/video-avatar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: fullResponse }),
+          });
+          
+          if (videoResponse.ok) {
+            const videoData = await videoResponse.json();
+            videoUrl = videoData.videoUrl;
+          }
+        } catch (videoError) {
+          console.error('Video avatar error:', videoError);
+        }
+        setIsGeneratingVideo(false);
+      }
+
+      // Final update with image/video
+      setMessages(prev => {
+        const updated = [...prev];
+        updated[botMessageIndex] = { 
+          text: fullResponse || "Let's try that again.",
           sender: 'bot',
           image: !videoUrl ? (image || undefined) : undefined,
           video: videoUrl,
         };
-        setMessages(prev => [...prev, botMessage]);
-        
-        // Only speak if no video (video has its own audio)
-        if (!videoUrl) {
-          speakText(data.response);
-        }
-      } else {
-        const errorMessage: Message = {
-          text: "Look, there's a technical issue. Let's try that again.",
-          sender: 'bot',
-        };
-        setMessages(prev => [...prev, errorMessage]);
+        return updated;
+      });
+      
+      // Only speak if no video (video has its own audio)
+      if (!videoUrl && fullResponse) {
+        speakText(fullResponse);
       }
+
+      // Track the chat interaction
+      trackEvent('chat_message', {
+        question: currentInput,
+        responsePreview: fullResponse.substring(0, 100),
+      });
+
     } catch (error) {
       console.error('Error:', error);
-      const errorMessage: Message = {
-        text: "Connection issue. I don't have time for technical problems - let's try again.",
-        sender: 'bot',
-      };
-      setMessages(prev => [...prev, errorMessage]);
+      setIsStreaming(false);
+      setMessages(prev => {
+        const updated = [...prev];
+        updated[botMessageIndex] = {
+          text: "Connection issue. Let's try again.",
+          sender: 'bot',
+        };
+        return updated;
+      });
     } finally {
       setIsLoading(false);
+      setIsStreaming(false);
     }
   };
 
@@ -466,18 +560,18 @@ const Chatbot: React.FC = () => {
 
       {/* Messages */}
       <div className="h-[450px] overflow-y-auto p-4 space-y-4 bg-gray-50">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
+          {messages.map((message, index) => (
             <div
+              key={index}
+            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
               className={`max-w-[80%] p-4 rounded-2xl ${
-                message.sender === 'user'
+                  message.sender === 'user'
                   ? 'bg-blue-600 text-white rounded-br-md'
                   : 'bg-white text-gray-800 shadow-md rounded-bl-md border border-gray-100'
-              }`}
-            >
+                }`}
+              >
               <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
               {message.video && (
                 <div className="mt-3 rounded-lg overflow-hidden">
@@ -493,22 +587,22 @@ const Chatbot: React.FC = () => {
               )}
               {message.image && !message.video && (
                 <div className="mt-3 relative w-full aspect-[4/3] max-h-64 rounded-lg overflow-hidden">
-                  <Image
-                    src={message.image.src}
-                    alt={message.image.alt}
+                    <Image
+                      src={message.image.src}
+                      alt={message.image.alt}
                     fill
                     className="object-contain bg-gray-100"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';
                     }}
-                  />
-                </div>
-              )}
+                    />
+                  </div>
+                )}
             </div>
-          </div>
+                  </div>
         ))}
         
-        {isLoading && (
+        {isLoading && !isStreaming && (
           <div className="flex justify-start">
             <div className="bg-white p-4 rounded-2xl rounded-bl-md shadow-md border border-gray-100">
               <div className="flex items-center gap-2">
@@ -516,15 +610,20 @@ const Chatbot: React.FC = () => {
                 <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
                 <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
               </div>
-              {isGeneratingVideo && (
-                <p className="text-xs text-purple-600 mt-2 animate-pulse">🎬 Generating video avatar...</p>
-              )}
             </div>
           </div>
         )}
         
-        <div ref={messagesEndRef} />
-      </div>
+        {isGeneratingVideo && (
+          <div className="flex justify-start">
+            <div className="bg-white p-3 rounded-xl shadow-sm border border-purple-200">
+              <p className="text-xs text-purple-600 animate-pulse">🎬 Generating video avatar...</p>
+            </div>
+          </div>
+        )}
+        
+          <div ref={messagesEndRef} />
+        </div>
 
       {/* Input */}
       <form onSubmit={handleSubmit} className="p-4 bg-white border-t border-gray-200">
@@ -570,9 +669,9 @@ const Chatbot: React.FC = () => {
             🎤 Listening... Speak now
           </p>
         )}
-      </form>
+        </form>
     </div>
   );
 };
 
-export default Chatbot;
+export default Chatbot; 

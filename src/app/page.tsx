@@ -119,7 +119,7 @@ export default function Home() {
                 <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
               </div>
             }>
-              <Chatbot />
+          <Chatbot />
             </Suspense>
           </div>
 
@@ -134,7 +134,7 @@ export default function Home() {
       </div>
     </main>
   );
-}
+} 
 
 function QuickPrompt({ text }: { text: string }) {
   const handleClick = () => {
