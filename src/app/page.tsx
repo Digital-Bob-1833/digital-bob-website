@@ -44,7 +44,13 @@ export default function Home() {
             <p className="text-blue-300 mt-1">Bob Hackney</p>
             <div className="flex items-center justify-center gap-2 mt-3 flex-wrap">
               <span className="px-3 py-1 bg-blue-500/20 text-blue-300 text-sm rounded-full border border-blue-500/30">CTO/CPO</span>
-              <span className="px-3 py-1 bg-green-500/20 text-green-300 text-sm rounded-full border border-green-500/30">US Marine</span>
+              <span className="px-3 py-1 bg-green-500/20 text-green-300 text-sm rounded-full border border-green-500/30 flex items-center gap-1">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2L9 7H3l4.5 5L5 22l7-4 7 4-2.5-10L21 7h-6L12 2zM12 5.5l1.5 3h3l-2.5 2.5 1 4-3-1.5-3 1.5 1-4-2.5-2.5h3L12 5.5z"/>
+                      <circle cx="12" cy="14" r="3" fill="none" stroke="currentColor" strokeWidth="1"/>
+                    </svg>
+                    USMC
+                  </span>
             </div>
             <p className="text-slate-400 text-sm mt-4 max-w-[280px]">
               2025 ORBIE Finalist • 25+ years tech leadership
@@ -104,7 +110,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">Digital Bob</h1>
-              <p className="text-blue-300 text-sm">CTO/CPO • US Marine • PE Value Creator</p>
+              <p className="text-blue-300 text-sm">CTO/CPO • USMC • PE Value Creator</p>
             </div>
           </div>
 
