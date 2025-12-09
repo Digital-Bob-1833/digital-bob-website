@@ -1,26 +1,73 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
   <defs>
-    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#FFD700"/>
       <stop offset="50%" style="stop-color:#DAA520"/>
       <stop offset="100%" style="stop-color:#B8860B"/>
     </linearGradient>
   </defs>
-  <!-- Background circle -->
-  <circle cx="50" cy="50" r="48" fill="#8B0000" stroke="#FFD700" stroke-width="3"/>
-  <!-- Inner circle -->
-  <circle cx="50" cy="50" r="42" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+  
+  <!-- Outer gold ring -->
+  <circle cx="100" cy="100" r="98" fill="#DAA520" stroke="#B8860B" stroke-width="2"/>
+  
+  <!-- Red inner circle -->
+  <circle cx="100" cy="100" r="88" fill="#8B0000"/>
+  
+  <!-- Inner gold ring -->
+  <circle cx="100" cy="100" r="78" fill="none" stroke="#DAA520" stroke-width="3"/>
+  
+  <!-- Text path for "UNITED STATES" at top -->
+  <defs>
+    <path id="topArc" d="M 30,100 A 70,70 0 0,1 170,100" fill="none"/>
+    <path id="bottomArc" d="M 170,100 A 70,70 0 0,1 30,100" fill="none"/>
+  </defs>
+  
+  <text fill="#DAA520" font-family="Arial Black, sans-serif" font-size="14" font-weight="bold">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">UNITED STATES</textPath>
+  </text>
+  
+  <text fill="#DAA520" font-family="Arial Black, sans-serif" font-size="14" font-weight="bold">
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">MARINE CORPS</textPath>
+  </text>
+  
+  <!-- EGA - Eagle -->
+  <g fill="#DAA520" stroke="#B8860B" stroke-width="0.5">
+    <!-- Eagle body -->
+    <ellipse cx="100" cy="58" rx="12" ry="8"/>
+    <!-- Eagle head -->
+    <circle cx="100" cy="50" r="6"/>
+    <!-- Beak -->
+    <path d="M94 50 L88 52 L94 51 Z"/>
+    <!-- Left wing -->
+    <path d="M88 58 Q60 50 45 70 Q55 62 65 60 Q55 68 50 78 Q60 68 72 64 Q62 74 58 85 Q70 72 85 68 L88 62 Z"/>
+    <!-- Right wing -->
+    <path d="M112 58 Q140 50 155 70 Q145 62 135 60 Q145 68 150 78 Q140 68 128 64 Q138 74 142 85 Q130 72 115 68 L112 62 Z"/>
+  </g>
+  
   <!-- Globe -->
-  <circle cx="50" cy="52" r="18" fill="none" stroke="url(#gold)" stroke-width="2"/>
-  <ellipse cx="50" cy="52" rx="18" ry="7" fill="none" stroke="url(#gold)" stroke-width="1.5"/>
-  <line x1="50" y1="34" x2="50" y2="70" stroke="url(#gold)" stroke-width="1.5"/>
+  <g fill="none" stroke="#DAA520" stroke-width="2">
+    <circle cx="100" cy="95" r="22"/>
+    <ellipse cx="100" cy="95" rx="22" ry="8"/>
+    <ellipse cx="100" cy="95" rx="8" ry="22"/>
+    <line x1="78" y1="95" x2="122" y2="95"/>
+  </g>
+  
   <!-- Anchor -->
-  <path d="M50 72 L50 80 M42 80 L58 80 M45 77 Q50 82 55 77" fill="none" stroke="url(#gold)" stroke-width="2.5" stroke-linecap="round"/>
-  <circle cx="50" cy="70" r="3" fill="url(#gold)"/>
-  <!-- Eagle wings -->
-  <path d="M50 30 Q30 35 20 50 Q25 45 35 42 Q28 48 25 55 Q32 48 42 45 L50 38 L58 45 Q68 48 75 55 Q72 48 65 42 Q75 45 80 50 Q70 35 50 30" fill="url(#gold)"/>
-  <!-- Eagle head -->
-  <ellipse cx="50" cy="32" rx="6" ry="5" fill="url(#gold)"/>
-  <path d="M44 32 L40 34" stroke="url(#gold)" stroke-width="2" stroke-linecap="round"/>
+  <g fill="#DAA520" stroke="#B8860B" stroke-width="0.5">
+    <!-- Anchor ring -->
+    <circle cx="100" cy="118" r="5" fill="none" stroke="#DAA520" stroke-width="3"/>
+    <!-- Anchor shaft -->
+    <rect x="97" y="123" width="6" height="30" rx="1"/>
+    <!-- Anchor arms -->
+    <path d="M85 148 Q100 158 115 148 L112 153 Q100 162 88 153 Z"/>
+    <!-- Anchor flukes -->
+    <path d="M82 150 L78 158 L88 152 Z"/>
+    <path d="M118 150 L122 158 L112 152 Z"/>
+    <!-- Crossbar -->
+    <rect x="88" y="130" width="24" height="4" rx="1"/>
+  </g>
+  
+  <!-- Rope around anchor -->
+  <path d="M95 125 Q85 135 90 145 Q95 140 97 148" fill="none" stroke="#DAA520" stroke-width="2"/>
+  <path d="M105 125 Q115 135 110 145 Q105 140 103 148" fill="none" stroke="#DAA520" stroke-width="2"/>
 </svg>
-
