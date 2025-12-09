@@ -41,7 +41,7 @@ interface Message {
   video?: string; // D-ID talking avatar video URL
 }
 
-// Photo collections organized by topic
+// Photo collections organized by topic - ONLY files that exist
 const photoCollections = {
   marine: [
     '/images/Marine/Marine Vehicle.jpg',
@@ -56,21 +56,11 @@ const photoCollections = {
   perfectserve: [
     '/images/Perfectserve/Perfectserve leadership.jpeg',
     '/images/Perfectserve/Perfectserve-tech-team.jpeg',
-    '/images/Perfectserve/IMG_3639.jpeg',
     '/images/Perfectserve/IMG_5704.jpeg',
-    '/images/Perfectserve/2117762790038193511.jpg',
-    '/images/Perfectserve/435685396061504320.jpg',
-  ],
-  family: [
-    '/images/Family/bob-family.jpg',
-    '/images/Family/bob-dawn.jpeg',
-    '/images/Family/Bob & Dawn.jpg',
-    '/images/Family/IMG_2507.jpeg',
-    '/images/Family/IMG_8861.jpeg',
+    '/images/Perfectserve/Perfectserve dinner.jpg',
   ],
   professional: [
     '/images/Professional/bob-professional.jpg',
-    '/images/Professional/cold-bob.jpeg',
   ],
 };
 
@@ -79,54 +69,73 @@ const getRandomPhoto = (collection: string[]): string => {
   return collection[Math.floor(Math.random() * collection.length)];
   };
 
-// Map topics to relevant images
+// Map topics to relevant images - ONLY checks user's question to avoid mismatches
 const getImageForResponse = (userInput: string, botResponse: string): { src: string; alt: string } | null => {
-  const input = (userInput + ' ' + botResponse).toLowerCase();
+  const question = userInput.toLowerCase();
   
-  if (input.includes('usmc') || input.includes('marine') || input.includes('military') || input.includes('navy achievement') || input.includes('veteran') || input.includes('overseas deployment')) {
-    return { src: getRandomPhoto(photoCollections.marine), alt: 'Bob Hackney - USMC Marine' };
-  }
-  
-  if (input.includes('davita') || input.includes('da vita') || input.includes('dialysis') || input.includes('cwow') || input.includes('clinical systems') || input.includes('jerry')) {
-    return { src: getRandomPhoto(photoCollections.davita), alt: 'Bob Hackney - DaVita' };
-  }
-  
-  if (input.includes('situsamc') || input.includes('situs') || input.includes('stonepoint') || input.includes('real estate finance')) {
-    return { src: getRandomPhoto(photoCollections.professional), alt: 'Bob Hackney - SitusAMC' };
-  }
-  
-  if (input.includes('telecom') || input.includes('billing') || input.includes('ericsson') || input.includes('nortel') || input.includes('motorola') || input.includes('prepaid')) {
-    return { src: getRandomPhoto(photoCollections.professional), alt: 'Bob Hackney - Telecom' };
-  }
-  
-  if (input.includes('playbook') || input.includes('transform') || input.includes('private equity') || input.includes('strategy')) {
-    return { src: '/images/Perfectserve/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Leadership & Strategy' };
-  }
-  
-  if (input.includes('perfectserve') || input.includes('perfect serve') || input.includes('k1') || input.includes('arr') || input.includes('ebitda')) {
-    return { src: getRandomPhoto(photoCollections.perfectserve), alt: 'Bob Hackney - Perfectserve' };
-  }
-  
-  if (input.includes('team') || input.includes('engineers') || input.includes('developers') || input.includes('staff') || input.includes('offshore') || input.includes('albania')) {
-    return { src: '/images/Perfectserve/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Tech Team' };
-  }
-  
-  if (input.includes('family') || input.includes('children') || input.includes('kids') || input.includes('mel') || input.includes('greg') || input.includes('robby') || input.includes('hannah') || input.includes('nathan') || input.includes('grandchildren') || input.includes('grandkids')) {
-    return { src: '/images/Family/Family.jpg', alt: 'Bob Hackney with Family' };
-  }
-  
-  if (input.includes('dawn') || input.includes('wife') || input.includes('spouse')) {
+  // Family - check FIRST and be specific (user explicitly asks about family)
+  if (question.includes('dawn') || question.includes('wife') || question.includes('spouse')) {
     return { src: '/images/Family/Bob & Dawn.jpg', alt: 'Bob Hackney with Dawn' };
   }
   
-  if (input.includes('professional') || input.includes('headshot') || input.includes('cto') || input.includes('leader') || input.includes('leadership')) {
-    return { src: getRandomPhoto(photoCollections.professional), alt: 'Bob Hackney - Professional' };
+  if (question.includes('family') || question.includes('children') || question.includes('kids') || 
+      question.includes('mel') || question.includes('greg') || question.includes('robby') || 
+      question.includes('hannah') || question.includes('nathan') || question.includes('grandchildren') || 
+      question.includes('grandkids') || question.includes('your kids')) {
+    return { src: '/images/Family/Family.jpg', alt: 'Bob Hackney with Family' };
   }
   
-  if (input.includes('ai') || input.includes('cursor') || input.includes('llm') || input.includes('machine learning') || input.includes('automation')) {
+  // Military/Marine - specific keywords
+  if (question.includes('marine') || question.includes('military') || question.includes('usmc') || 
+      question.includes('navy achievement') || question.includes('veteran') || question.includes('corps')) {
+    return { src: getRandomPhoto(photoCollections.marine), alt: 'Bob Hackney - USMC Marine' };
+  }
+  
+  // DaVita - specific company name
+  if (question.includes('davita') || question.includes('da vita') || question.includes('dialysis') || 
+      question.includes('cwow')) {
+    return { src: getRandomPhoto(photoCollections.davita), alt: 'Bob Hackney - DaVita' };
+  }
+  
+  // SitusAMC - specific company name
+  if (question.includes('situsamc') || question.includes('situs') || question.includes('stonepoint')) {
+    return { src: getRandomPhoto(photoCollections.professional), alt: 'Bob Hackney - SitusAMC' };
+  }
+  
+  // Playbook/Strategy - specific leadership question
+  if (question.includes('playbook') || question.includes('transform companies')) {
+    return { src: '/images/Perfectserve/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Leadership & Strategy' };
+  }
+  
+  // PerfectServe - current company
+  if (question.includes('perfectserve') || question.includes('perfect serve') || question.includes('current role') ||
+      question.includes('current job') || question.includes('where do you work')) {
+    return { src: getRandomPhoto(photoCollections.perfectserve), alt: 'Bob Hackney - Perfectserve' };
+  }
+  
+  // Team - only if explicitly asking about team
+  if (question.includes('your team') || question.includes('tech team') || question.includes('engineering team') ||
+      question.includes('offshore') || question.includes('albania')) {
+    return { src: '/images/Perfectserve/Perfectserve-tech-team.jpeg', alt: 'Bob Hackney with Tech Team' };
+  }
+  
+  // Leadership style - show professional photo
+  if (question.includes('leadership') || question.includes('leader') || question.includes('manage')) {
+    return { src: '/images/Perfectserve/Perfectserve leadership.jpeg', alt: 'Bob Hackney - Leadership' };
+  }
+  
+  // ORBIE Award
+  if (question.includes('orbie') || question.includes('award')) {
+    return { src: '/images/Perfectserve/Perfectserve leadership.jpeg', alt: 'Bob Hackney - ORBIE Finalist' };
+  }
+  
+  // AI/Technology questions
+  if (question.includes(' ai ') || question.includes('cursor') || question.includes('llm') || 
+      question.includes('machine learning') || question.includes('automation') || question.includes('technology')) {
     return { src: getRandomPhoto(photoCollections.perfectserve), alt: 'Bob Hackney - Technology' };
   }
   
+  // Default: no image for generic questions (prevents mismatches)
   return null;
 };
 

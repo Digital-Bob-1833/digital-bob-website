@@ -1,6 +1,15 @@
 {
   "events": [
     {
+      "id": "1765241894731-c98zpzswi",
+      "timestamp": "2025-12-09T00:58:14.731Z",
+      "type": "page_view",
+      "sessionId": "1765240294523-b8ujf8nxc",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.50 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36",
+      "referrer": "http://localhost:3000/",
+      "ip": "::1"
+    },
+    {
       "id": "1765241232584-9ja4ak411",
       "timestamp": "2025-12-09T00:47:12.584Z",
       "type": "page_view",
@@ -22,14 +31,14 @@
   "sessions": {
     "1765240294523-b8ujf8nxc": {
       "firstSeen": "2025-12-09T00:31:34.744Z",
-      "lastSeen": "2025-12-09T00:47:12.584Z",
+      "lastSeen": "2025-12-09T00:58:14.731Z",
       "messageCount": 0,
       "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.50 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36",
       "referrer": "http://localhost:3000/"
     }
   },
   "summary": {
-    "totalVisits": 2,
+    "totalVisits": 3,
     "totalMessages": 0,
     "uniqueSessions": 1,
     "topQuestions": [],
