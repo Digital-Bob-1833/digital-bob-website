@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700"/>
+      <stop offset="50%" style="stop-color:#DAA520"/>
+      <stop offset="100%" style="stop-color:#B8860B"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="#8B0000" stroke="#FFD700" stroke-width="3"/>
+  <!-- Inner circle -->
+  <circle cx="50" cy="50" r="42" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+  <!-- Globe -->
+  <circle cx="50" cy="52" r="18" fill="none" stroke="url(#gold)" stroke-width="2"/>
+  <ellipse cx="50" cy="52" rx="18" ry="7" fill="none" stroke="url(#gold)" stroke-width="1.5"/>
+  <line x1="50" y1="34" x2="50" y2="70" stroke="url(#gold)" stroke-width="1.5"/>
+  <!-- Anchor -->
+  <path d="M50 72 L50 80 M42 80 L58 80 M45 77 Q50 82 55 77" fill="none" stroke="url(#gold)" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="50" cy="70" r="3" fill="url(#gold)"/>
+  <!-- Eagle wings -->
+  <path d="M50 30 Q30 35 20 50 Q25 45 35 42 Q28 48 25 55 Q32 48 42 45 L50 38 L58 45 Q68 48 75 55 Q72 48 65 42 Q75 45 80 50 Q70 35 50 30" fill="url(#gold)"/>
+  <!-- Eagle head -->
+  <ellipse cx="50" cy="32" rx="6" ry="5" fill="url(#gold)"/>
+  <path d="M44 32 L40 34" stroke="url(#gold)" stroke-width="2" stroke-linecap="round"/>
+</svg>
+
