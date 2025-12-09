@@ -72,11 +72,7 @@ export default function Home() {
           </div>
 
           {/* Quick stats */}
-          <div className="mt-6 grid grid-cols-2 gap-3 w-full max-w-[300px]">
-            <div className="bg-white/5 rounded-lg p-3 text-center border border-white/10">
-              <p className="text-2xl font-bold text-white">$103M</p>
-              <p className="text-xs text-slate-400">ARR Growth</p>
-            </div>
+          <div className="mt-6 grid grid-cols-3 gap-3 w-full max-w-[300px]">
             <div className="bg-white/5 rounded-lg p-3 text-center border border-white/10">
               <p className="text-2xl font-bold text-white">133%</p>
               <p className="text-xs text-slate-400">R&D Velocity</p>
